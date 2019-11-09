@@ -1,6 +1,6 @@
 import { setGlobal, getGlobal } from 'reactn'
 import * as WebBrowser from 'expo-web-browser'
-import { AsyncStorage, Clipboard } from 'react-native'
+import { AsyncStorage, Clipboard, Alert } from 'react-native'
 
 
 //mandar un mensaje nuevo
@@ -184,7 +184,7 @@ socket.addEventListener('open', async function (event) {
     socket.send(JSON.stringify({
         command: 'jwt',
         payload: {
-            token: localStorage.getItem('token')
+            token: await AsyncStorage.getItem('token')
         }
     }));
     // socket.send(JSON.stringify({
@@ -227,7 +227,7 @@ function gotServerMessage(msg) {    //servidor manda los mensajes
                 me: msg.payload.me
             })
             break;
-        case 'chats': console.log('chats', msg.payload.chats);
+        case 'chats': console.warn('chats', msg.payload.chats);
             setGlobal({
                 chats: msg.payload.chats
             })
@@ -238,7 +238,15 @@ function gotServerMessage(msg) {    //servidor manda los mensajes
             })
             break;
         case 'notification':
-            swal(msg.payload.msg, '', msg.payload.isError ? "error" : "success");
+            Alert.alert(
+                msg.payload.msg,
+                '',
+                [
+                    { text: 'OK' },
+                ],
+                { cancelable: true },
+            );
+            // swal(msg.payload.msg, '', msg.payload.isError ? "error" : "success");
             // msg.payload.isError
             break;
         case 'notifications':

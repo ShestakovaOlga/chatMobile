@@ -13,7 +13,7 @@ export default function LinksScreen() {
 }
 
 LinksScreen.navigationOptions = {
-  title: 'Links',
+  title: 'Info',
 };
 
 const styles = StyleSheet.create({

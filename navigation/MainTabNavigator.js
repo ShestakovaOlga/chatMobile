@@ -1,63 +1,47 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
-
-import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-
+import GroupsScreen from '../screens/GroupsScreen';
+import InfoScreen from '../screens/InfoScreen';
+import ChatScreen from '../screens/ChatScreen';
+import ChatNavigator from './ChatNavigator';
+import { AntDesign } from '@expo/vector-icons';
+import Colors from '../constants/Colors';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
   default: {},
 });
 
-const HomeStack = createStackNavigator(
+
+const InfoStack = createStackNavigator(
   {
-    Home: HomeScreen,
+    Info: InfoScreen,
   },
   config
 );
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+InfoStack.navigationOptions = {
+  tabBarLabel: 'Info',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
+    <AntDesign name="infocirlceo" size={26} color={focused ? Colors.prinColor : '#BDC3C7'} />
   ),
 };
 
-HomeStack.path = '';
-
-const LinksStack = createStackNavigator(
-  {
-    Links: LinksScreen,
-  },
-  config
-);
-
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
-  ),
-};
-
-LinksStack.path = '';
+InfoStack.path = '';
 
 
 
 const tabNavigator = createBottomTabNavigator({
-  HomeStack,
-  LinksStack,
+  ChatNavigator,
+  InfoStack,
+}, {
+  tabBarOptions: {
+    activeTintColor: Colors.prinColor
+  }
 });
 
 tabNavigator.path = '';
+
 
 export default tabNavigator;

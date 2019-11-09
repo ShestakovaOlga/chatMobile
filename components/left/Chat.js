@@ -1,6 +1,6 @@
 import React, { useGlobal } from 'reactn';
 import { AntDesign } from '@expo/vector-icons';
-import { chatRead } from '../server';
+import { chatRead } from '../../server';
 import {
     Image,
     Platform,
@@ -24,12 +24,7 @@ export default function Chat({ chat, notifications }) {
 
 
     return <View style={{
-        display: 'flex',
-        flexDirection: 'column',
         borderRight: '1px solid #E1E1E8',
-        overflowY: 'scroll',
-        width: '100%',
-        fontFamily: "'Roboto', sans-serif",
     }}>
         <View onClick={() => {
             chatRead(chat.ID)
@@ -39,57 +34,52 @@ export default function Chat({ chat, notifications }) {
                 [chat.ID]: null
             })
         }} style={{
-            display: 'flex',
+            flexDirection: 'row',
             alignItems: 'center',
             backgroundColor: activeChat == chat.ID ? '#815ae6' : 'white',
             color: activeChat == chat.ID ? 'white' : 'black',
-            // borderBottom: '1px solid #E1E1E8 ',
-            cursor: 'pointer',
+            borderBottom: '1px solid #E1E1E8 ',
         }}>
             {chat.avatar ? <View style={{
-                width: 50,
-                height: 60,
+                width: 30,
+                height: 30,
                 marginRight: 5,
                 marginLeft: 3,
-            }}><Image style={{ width: '100%', height: '100%' }} src={chat.avatar} alt="" /></View> : <AntDesign
+            }}><Image source={{ uri: chat.avatar }} style={{ width: '100%', height: '100%' }} alt="img" /></View> : <AntDesign
                     style={{
-                        width: 50,
-                        height: 50,
+                        width: 30,
+                        height: 30,
                         marginRight: 5,
                         color: activeChat == chat.ID ? 'white' : '#815ae6',
                     }}
                 />}
 
-            <View style={{
-                display: 'flex',
-                flexDirection: 'column',
-                flexGrow: 1,
-                padding: 5,
-            }}>{chat.name}
-
+            <View>
+                <Text>{chat.name}</Text>
                 {chat.Messages.length > 0 && <View style={{
                     color: '#BDC3C7',//gris claro
-                    fontSize: '0.9rem',
                     marginTop: 5
-                }}> {new Date(chat.Messages[chat.Messages.length - 1].UpdatedAt).toLocaleString()}
+                }}>
+                    <Text>{new Date(chat.Messages[chat.Messages.length - 1].UpdatedAt).toLocaleString()}</Text>
                 </View>}
             </View>
             {activeChat !== chat.ID && notifications && <View style={{
                 width: 13,
                 height: 13,
-                display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 border: '1px solid gray',
-                borderRadius: 100,
+                borderRadius: 99,
                 marginBottom: 2,
                 padding: 4,
-                fontSize: '0.8rem'
-            }}><View>{notifications}</View></View>}
+            }}>
+                <Text>{notifications}</Text>
+            </View>}
             <View style={{
                 color: '#815ae6',
-                fontSize: '1.2rem',
-            }}><AntDesign /></View>
+            }}>
+                <AntDesign />
+            </View>
         </View>
     </View >
 }

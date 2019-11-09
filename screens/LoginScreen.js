@@ -23,7 +23,7 @@ export default function LoginScreen(props) {
 
   useEffect(() => {
     if (logged) {
-      props.navigation.navigate('Links')
+      props.navigation.navigate('Groups')
     }
   }, [logged])
 
@@ -36,7 +36,6 @@ export default function LoginScreen(props) {
       backgroundColor: Colors.prinColor,
     }}>
       <View style={{
-        fontSize: '1rem',
         borderWidth: 1,
         borderColor: 'gray',
         borderRadius: 15,
@@ -66,14 +65,14 @@ export default function LoginScreen(props) {
             setMail(value)
           }} style={{
             width: '100%',
-            height: 40, borderColor: 'gray',
+            height: 40,
+            borderColor: 'gray',
             borderBottomWidth: 1,
             margin: 15
           }}
           autoCapitalize='none'
           placeholder='Email'
           textContentType='mail'
-          autoComplete='mail'
           value={mail}>
         </TextInput>
         <TextInput
