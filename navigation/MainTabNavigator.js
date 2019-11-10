@@ -1,9 +1,7 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
-import GroupsScreen from '../screens/GroupsScreen';
 import InfoScreen from '../screens/InfoScreen';
-import ChatScreen from '../screens/ChatScreen';
 import ChatNavigator from './ChatNavigator';
 import { AntDesign } from '@expo/vector-icons';
 import Colors from '../constants/Colors';

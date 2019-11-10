@@ -2,7 +2,7 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import GroupsScreen from '../screens/GroupsScreen';
-import ChatScreen from '../screens/ChatScreen';
+import MessageScreen from '../screens/MessageScreen';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 
@@ -24,7 +24,7 @@ GroupsStack.path = '';
 
 const ChatStack = createStackNavigator(
   {
-    Chat: ChatScreen,
+    Chat: MessageScreen,
   },
   config
 );
