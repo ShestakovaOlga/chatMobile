@@ -39,7 +39,6 @@ export default function LoginScreen(props) {
         borderWidth: 1,
         borderColor: 'gray',
         borderRadius: 15,
-        shadowColor: '#fff',
         height: '60%',
         width: '80%',
         justifyContent: 'center',

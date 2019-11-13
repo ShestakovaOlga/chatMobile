@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useGlobal } from 'reactn';
 import Chat from '../components/left/Chat';
 import { getChats } from '../server';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 import {
     Image,
     Platform,
@@ -15,6 +15,7 @@ import {
     FlatList,
 } from 'react-native';
 import { chatTime } from "../constants/Date";
+import Colors from '../constants/Colors';
 
 export default function GroupsScreen(props) {
     const [chats, setChats] = useGlobal('chats')
@@ -70,7 +71,15 @@ export default function GroupsScreen(props) {
 }
 
 GroupsScreen.navigationOptions = {
-    title: 'Groups',
+    headerRight: (
+        <TouchableOpacity>
+            <AntDesign style={{
+                marginRight: 5,
+                transform: [{ rotate: '90deg' }]
+            }} name="select1" size={23} color={Colors.prinColor} />
+        </TouchableOpacity>
+    ),
+    title: 'Groups'
 };
 
 const styles = StyleSheet.create({

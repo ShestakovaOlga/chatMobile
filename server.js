@@ -50,7 +50,7 @@ export function Users() {
 
 //iniciar sesion
 export async function login(email, password) {
-    console.log('login');
+    console.warn('login');
 
     let ids = {}
     socket.send(JSON.stringify({
@@ -61,7 +61,7 @@ export async function login(email, password) {
             pushToken: ids.userId
         }
     }));
-    console.log('after socket send');
+    console.warn('after socket send');
 
     // try {
     //     ids = await OneSignal.getUserId()
@@ -211,18 +211,18 @@ function gotServerMessage(msg) {    //servidor manda los mensajes
                 logged: true
             })
             break;
-        case 'users': console.log('users', msg.payload);
+        case 'users': console.warn('users', msg.payload);
             setGlobal({
                 users: msg.payload.users
             })
             break;
-        case 'check': console.log('check', msg.payload);
+        case 'check': console.warn('check', msg.payload);
             setGlobal({
                 logged: true
             })
             break;
         case 'me':
-            console.log('me', msg.payload.me);
+            console.warn('me', msg.payload.me);
             setGlobal({
                 me: msg.payload.me
             })

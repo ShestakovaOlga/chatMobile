@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useGlobal } from 'reactn';
+import React, { useState, useEffect, useGlobal, setGlobal } from 'reactn';
 import Chat from '../components/left/Chat';
 import { getMe } from '../server'
 import {
@@ -11,10 +11,12 @@ import {
     View,
     InputEvent,
     Button,
+    TextInput,
 } from 'react-native';
 import Colors from '../constants/Colors';
+import { MaterialIcons } from '@expo/vector-icons';
 
-export default function MessageScreen() {
+export default function MessageScreen(props) {
     const [chats, setChats] = useGlobal('chats')
     const [notifications] = useGlobal('notifications')
     const [logged] = useGlobal('logged')
@@ -22,16 +24,17 @@ export default function MessageScreen() {
     const [me] = useGlobal('me')
 
 
+    const chat = chats.find(chat => chat.ID === activeChat)
     useEffect(() => {
         getMe()
-    }, [])
-    const chat = chats.find(chat => chat.ID === activeChat)
+        props.navigation.setParams({ title: chat ? chat.name : 'Chat' })
+    }, [chat])
+
     return (
         <ScrollView style={{
             flex: 1,
             paddingTop: 5,
-            backgroundColor: Colors.prinColorLight,
-
+            backgroundColor: Colors.prinColorLight
         }} >
             {chat && me && chat.Messages.map((message) => <View style={{
                 backgroundColor: 'white',
@@ -42,15 +45,24 @@ export default function MessageScreen() {
                 alignSelf: me.ID === message.author ? 'flex-end' : 'flex-start'
             }}>
                 <Text style={{ color: 'red', fontWeight: 'bold' }}> {getUsername(chats, activeChat, message)}</Text>
-                <Text style={{}}> {message.text}</Text>
+                <Text>{message.text}</Text>
             </View>)}
         </ScrollView>
     );
 }
 
-MessageScreen.navigationOptions = {
-    title: 'Home',
-};
+MessageScreen.navigationOptions = ({ navigation }) => ({
+    headerLeft: (
+        <TouchableOpacity onPress={() => {
+            setGlobal({ activeChat: false })
+            navigation.navigate('Groups')
+        }}>
+            <MaterialIcons name="keyboard-arrow-left" size={32} color={Colors.prinColor} />
+        </TouchableOpacity>
+    ),
+    title: navigation.getParam('title', 'Chat'),
+});
+
 
 function getUsername(chats, activeChat, message) {
     const chat = chats.find(c => c.ID == activeChat)
