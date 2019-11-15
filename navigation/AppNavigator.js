@@ -2,12 +2,15 @@ import React from 'react';
 import { createAppContainer, createSwitchNavigator, createStackNavigator } from 'react-navigation';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
-
 import MainTabNavigator from './MainTabNavigator';
 import MessageScreen from '../screens/MessageScreen';
+import SelectContactScreen from '../screens/SelectContactScreen';
 
 const ChatStack = createStackNavigator({
   Chat: MessageScreen
+})
+const SelectContact = createStackNavigator({
+  Contacts: SelectContactScreen
 })
 
 export default createAppContainer(
@@ -17,6 +20,7 @@ export default createAppContainer(
     Login: LoginScreen,
     Signup: SignupScreen,
     Main: MainTabNavigator,
-    Chat: ChatStack
+    Chat: ChatStack,
+    Contacts: SelectContact,
   })
 );

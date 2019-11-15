@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useGlobal, setGlobal } from 'reactn';
-import Chat from '../components/left/Chat';
 import { getMe } from '../server'
 import {
     Image,

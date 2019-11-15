@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useGlobal } from 'reactn';
+import React, { useState, useEffect, useGlobal, setGlobal } from 'reactn';
 import Chat from '../components/left/Chat';
 import { getChats } from '../server';
 import { MaterialIcons, AntDesign } from '@expo/vector-icons';
@@ -23,6 +23,7 @@ export default function GroupsScreen(props) {
     const [logged] = useGlobal('logged')
     const [activeChat, setActiveChat] = useGlobal('activeChat')
     const [showMenu, setShowMenu] = useGlobal('showMenu')
+    const [showContacts] = useGlobal('showContacts')
 
 
     useEffect(() => {
@@ -70,17 +71,20 @@ export default function GroupsScreen(props) {
     );
 }
 
-GroupsScreen.navigationOptions = {
+GroupsScreen.navigationOptions = ({ navigation }) => ({
     headerRight: (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+            setGlobal({ showContacts: true })
+            navigation.navigate('Contacts')
+        }}>
             <AntDesign style={{
                 marginRight: 5,
                 transform: [{ rotate: '90deg' }]
             }} name="select1" size={23} color={Colors.prinColor} />
         </TouchableOpacity>
     ),
-    title: 'Groups'
-};
+    title: navigation.getParam('title', 'Groups')
+});
 
 const styles = StyleSheet.create({
     container: {

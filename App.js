@@ -43,7 +43,11 @@ export default function App(props) {
     );
   } else {
     return (
-      <View style={styles.container}>
+      <View style={{
+        flex: 1,
+        backgroundColor: '#fff',
+        maxWidth: 1000,
+      }}>
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
         <AppNavigator />
       </View>
@@ -73,9 +77,3 @@ function handleFinishLoading(setLoadingComplete) {
   setLoadingComplete(true);
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-});
