@@ -50,8 +50,6 @@ export function Users() {
 
 //iniciar sesion
 export async function login(email, password) {
-    console.warn('login');
-
     let ids = {}
     socket.send(JSON.stringify({
         command: 'login',
@@ -61,7 +59,7 @@ export async function login(email, password) {
             pushToken: ids.userId
         }
     }));
-    console.warn('after socket send');
+
 
     // try {
     //     ids = await OneSignal.getUserId()
@@ -108,8 +106,8 @@ export async function sendSignup(name, email, password, avatar) {
 
 
 export async function Logout() {  //cerrar la sesion
-    localStorage.removeItem('token')
-    window.location.reload()
+    await AsyncStorage.removeItem('token')
+    setGlobal({ logged: false })
 }
 
 export async function CreateGroup(name, members) { //crear un grupo
@@ -199,35 +197,33 @@ socket.addEventListener('open', async function (event) {
 
 // Escucha por mensajes
 socket.addEventListener('message', function (event) {
-    console.log('Message from server', event.data);
     gotServerMessage(JSON.parse(event.data))
 });
 
 function gotServerMessage(msg) {    //servidor manda los mensajes
     switch (msg.command) {
-        case 'jwt': console.warn('jwt', msg.payload);
+        case 'jwt':
             AsyncStorage.setItem('token', msg.payload.token)
             setGlobal({
                 logged: true
             })
             break;
-        case 'users': console.warn('users', msg.payload);
+        case 'users':
             setGlobal({
                 users: msg.payload.users
             })
             break;
-        case 'check': console.warn('check', msg.payload);
+        case 'check':
             setGlobal({
                 logged: true
             })
             break;
         case 'me':
-            console.warn('me', msg.payload.me);
             setGlobal({
                 me: msg.payload.me
             })
             break;
-        case 'chats': console.warn('chats', msg.payload.chats);
+        case 'chats':
             setGlobal({
                 chats: msg.payload.chats
             })
