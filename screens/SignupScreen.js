@@ -12,6 +12,7 @@ import { sendSignup } from '../server'
 import { MonoText } from '../components/StyledText';
 import { TextInput } from 'react-native-gesture-handler';
 import Colors from '../constants/Colors';
+import AvatarSelect from '../components/AvatarSelect'
 
 export default function SignupScreen(props) {
     const [fullname, setFullname] = useGlobal('fullname')
@@ -98,6 +99,7 @@ export default function SignupScreen(props) {
                     secureTextEntry
                     value={password}>
                 </TextInput>
+                <AvatarSelect value={img} onChange={setImg} />
                 <TouchableOpacity
                     onPress={() => {
                         sendSignup(fullname, mail, password, img)

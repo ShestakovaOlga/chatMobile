@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useGlobal, setGlobal } from 'reactn';
-import Chat from '../components/left/Chat';
-import { getChats } from '../server';
+import { getChats, Logout } from '../server';
 import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 import {
     Image,
@@ -72,6 +71,17 @@ export default function GroupsScreen(props) {
 }
 
 GroupsScreen.navigationOptions = ({ navigation }) => ({
+    headerLeft: (
+        <TouchableOpacity onPress={async () => {
+            await Logout()
+            navigation.navigate('Login')
+        }}>
+            <AntDesign style={{
+                marginRight: 5,
+                transform: [{ rotate: '90deg' }]
+            }} name="select1" size={23} color={Colors.prinColor} />
+        </TouchableOpacity>
+    ),
     headerRight: (
         <TouchableOpacity onPress={() => {
             setGlobal({ showContacts: true })
