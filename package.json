@@ -6,9 +6,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest --watchAll",
-    "prepare": "expo-module prepare",
-    "prepublishOnly": "expo-module prepublishOnly"
+    "test": "jest --watchAll"
   },
   "jest": {
     "preset": "jest-expo"

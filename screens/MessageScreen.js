@@ -27,7 +27,9 @@ export default function MessageScreen(props) {
     const chat = chats.find(chat => chat.ID === activeChat)
     useEffect(() => {
         getMe()
-        props.navigation.setParams({ title: chat ? chat.name : 'Chat' })
+        props.navigation.setParams({
+            title: chat ? chat.name : 'Chat'
+        })
     }, [chat])
 
     return (
@@ -80,7 +82,14 @@ MessageScreen.navigationOptions = ({ navigation }) => ({
             <MaterialIcons name="keyboard-arrow-left" size={32} color={Colors.prinColor} />
         </TouchableOpacity>
     ),
-    title: navigation.getParam('title', 'Chat'),
+    headerTitle: () => (
+        <TouchableOpacity onPress={() => {
+            navigation.navigate('Groups')
+        }}>
+            <Text>{navigation.getParam('title', 'Chat')}</Text>
+        </TouchableOpacity>
+    ),
+    //title: navigation.getParam('title', 'Chat'),
 });
 
 
