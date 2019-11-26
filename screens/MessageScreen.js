@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useGlobal, setGlobal } from 'reactn';
-import { getMe } from '../server';
+import { getMe, sendMessage } from '../server';
 import { GiftedChat } from 'react-native-gifted-chat';
 import {
     Image,
@@ -12,6 +12,8 @@ import {
     InputEvent,
     Button,
     TextInput,
+    KeyboardAvoidingView,
+    StatusBar
 } from 'react-native';
 import Colors from '../constants/Colors';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -27,37 +29,31 @@ export default function MessageScreen(props) {
     const chat = chats.find(chat => chat.ID === activeChat)
     useEffect(() => {
         getMe()
+    }, [me])
+    useEffect(() => {
         props.navigation.setParams({
             title: chat ? chat.name : 'Chat'
         })
+        console.warn(chat.Messages);
     }, [chat])
 
     return (
-        <ScrollView style={{
+        <View style={{
             flex: 1,
             paddingTop: 5,
             backgroundColor: Colors.prinColorLight,
-            borderWidth: 1,
-            borderColor: 'red',
         }} >
             <GiftedChat
-                messages={[
-                    {
-                        _id: 1,
-                        text: 'Hello developer',
-                        createdAt: new Date(),
-                        user: {
-                            _id: 2,
-                            name: 'React Native',
-                            avatar: 'https://placeimg.com/140/140/any',
-                        },
-                    },
-                ]}
-                onSend={messages => console.warn(messages)}
-                user={{
-                    _id: 1,
+                inverted={false}
+                messages={chat.Messages}
+                onSend={messages => {
+                    messages.map(m => {
+                        sendMessage(m.text, chat.ID)
+                    })
                 }}
+                user={me}
             />
+            {Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={StatusBar.currentHeight * 3} />}
             {/* {chat && me && chat.Messages.map((message) => <View style={{
                 backgroundColor: 'white',
                 padding: 15,
@@ -69,7 +65,7 @@ export default function MessageScreen(props) {
                 <Text style={{ color: 'red', fontWeight: 'bold' }}> {getUsername(chats, activeChat, message)}</Text>
                 <Text>{message.text}</Text>
             </View>)} */}
-        </ScrollView>
+        </View>
     );
 }
 
