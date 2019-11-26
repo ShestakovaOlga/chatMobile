@@ -63,7 +63,7 @@ export default function GroupsScreen(props) {
                         <MaterialIcons name="keyboard-arrow-right" size={32} color='#BDC3C7' />
                     </View>
                 </TouchableOpacity>}
-                keyExtractor={(chat) => 'chat' + chat.ID}
+                keyExtractor={(chat) => 'chat' + chat._id}
             >
             </FlatList>
         </ScrollView>
