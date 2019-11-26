@@ -33,7 +33,7 @@ export default function SignupScreen(props) {
                 borderColor: 'gray',
                 borderRadius: 15,
                 shadowColor: '#fff',
-                height: '60%',
+                height: '75%',
                 width: '80%',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -51,7 +51,7 @@ export default function SignupScreen(props) {
                 <Text style={{
                     fontSize: 25,
                 }}>
-                    Sign up
+                    Registrarse
                 </Text>
                 <TextInput
                     onChangeText={(value) => {
@@ -79,8 +79,8 @@ export default function SignupScreen(props) {
                     }}
                     autoCapitalize='none'
                     placeholder='Email'
-                    textContentType='mail'
-                    autoComplete='mail'
+                    textContentType='email'
+                    autoComplete='email'
                     value={mail}>
                 </TextInput>
                 <TextInput
@@ -91,7 +91,6 @@ export default function SignupScreen(props) {
                         height: 40,
                         borderColor: 'gray',
                         borderBottomWidth: 1,
-                        margin: 15
                     }}
                     placeholder='Contraseña'
                     textContentType='password'
@@ -111,7 +110,8 @@ export default function SignupScreen(props) {
                         borderWidth: 1,
                         padding: 5,
                         borderRadius: 7,
-                        borderColor: Colors.prinColor
+                        borderColor: Colors.prinColor,
+                        marginTop: 10,
                     }}>
                     <MonoText style={{ color: Colors.prinColor }}>Registrarse</MonoText>
                 </TouchableOpacity>
