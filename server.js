@@ -170,35 +170,43 @@ export async function avatar(avatar) { //mandar avatar
 }
 
 
-//const ws = 'ws://192.168.1.10:8081/ws'
+//const ws = 'ws://c7252baf.ngrok.io/ws'
 const ws = 'wss://chat.galax.be/ws'
 
 
 // Crea una nueva conexión.
-const socket = new WebSocket(ws);
+let socket = new WebSocket(ws);
+connect()
 
-// Abre la conexión
-socket.addEventListener('open', async function (event) {
-    socket.send(JSON.stringify({
-        command: 'jwt',
-        payload: {
-            token: await AsyncStorage.getItem('token')
-        }
-    }));
-    // socket.send(JSON.stringify({
-    //     command: 'login',
-    //     payload: {
-    //         email: 'olga@olga.com',
-    //         password: 'olga',
-    //         pushToken: ids.userId
-    //     }
-    // }));
-});
+function connect() {
+    socket.onclose = () => {
+        setGlobal({
+            connected: false,
+        })
+        socket = new WebSocket(ws)
+        connect()
+    }
 
-// Escucha por mensajes
-socket.addEventListener('message', function (event) {
-    gotServerMessage(JSON.parse(event.data))
-});
+    // Abre la conexión
+    socket.addEventListener('open', async function (event) {
+        setGlobal({
+            connected: true,
+        })
+        socket.send(JSON.stringify({
+            command: 'jwt',
+            payload: {
+                token: await AsyncStorage.getItem('token')
+            }
+        }));
+    });
+
+    // Escucha por mensajes
+    socket.addEventListener('message', function (event) {
+        gotServerMessage(JSON.parse(event.data))
+    });
+}
+
+
 
 function gotServerMessage(msg) {    //servidor manda los mensajes
     switch (msg.command) {

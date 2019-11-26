@@ -1,8 +1,8 @@
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
-import React, { useState, setGlobal } from 'reactn';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import React, { useState, setGlobal, useGlobal } from 'reactn';
+import { Platform, StatusBar, StyleSheet, View, Text } from 'react-native';
 
 import AppNavigator from './navigation/AppNavigator';
 
@@ -28,10 +28,12 @@ setGlobal({
   mail: '',
   password: '',
   img: null,
+  connected: false
 })
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
+  const [connected] = useGlobal('connected')
 
   if (!isLoadingComplete) {
     return (
@@ -48,6 +50,17 @@ export default function App(props) {
         backgroundColor: '#fff',
         maxWidth: 1000,
       }}>
+        {!connected && <Text style={{
+          position: 'absolute',
+          top: 40,
+          width: '100%',
+          textAlign: 'center',
+          backgroundColor: 'yellow',
+          elevation: 100,
+          zIndex: 100,
+          height: 50,
+          textAlignVertical: 'center'
+        }}>Connecting</Text>}
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
         <AppNavigator />
       </View>
