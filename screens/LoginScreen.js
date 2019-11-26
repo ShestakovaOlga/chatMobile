@@ -57,7 +57,7 @@ export default function LoginScreen(props) {
         <Text style={{
           fontSize: 25,
         }}>
-          Log in
+          Iniciar sesión
       </Text>
         <TextInput
           onChangeText={(value) => {
@@ -71,7 +71,7 @@ export default function LoginScreen(props) {
           }}
           autoCapitalize='none'
           placeholder='Email'
-          textContentType='mail'
+          textContentType='email'
           value={mail}>
         </TextInput>
         <TextInput
@@ -99,7 +99,7 @@ export default function LoginScreen(props) {
             borderRadius: 7,
             borderColor: Colors.prinColor
           }}>
-          <MonoText style={{ color: Colors.prinColor }}>Iniciar sesion</MonoText>
+          <MonoText style={{ color: Colors.prinColor }}>Iniciar sesión</MonoText>
         </TouchableOpacity>
         <Text style={{
           marginTop: 50,
