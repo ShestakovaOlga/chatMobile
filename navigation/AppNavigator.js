@@ -5,6 +5,7 @@ import SignupScreen from '../screens/SignupScreen';
 import MainTabNavigator from './MainTabNavigator';
 import MessageScreen from '../screens/MessageScreen';
 import SelectContactScreen from '../screens/SelectContactScreen';
+import MembersGroupInfo from '../screens/MembersGroupInfo';
 
 const ChatStack = createStackNavigator({
   Chat: MessageScreen
@@ -12,7 +13,9 @@ const ChatStack = createStackNavigator({
 const SelectContact = createStackNavigator({
   Contacts: SelectContactScreen
 })
-
+const MembersGroup = createStackNavigator({
+  Members: MembersGroupInfo
+})
 export default createAppContainer(
   createSwitchNavigator({
     // You could add another route here for authentication.
@@ -22,5 +25,6 @@ export default createAppContainer(
     Main: MainTabNavigator,
     Chat: ChatStack,
     Contacts: SelectContact,
+    Members: MembersGroup,
   })
 );
