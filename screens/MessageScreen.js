@@ -80,9 +80,9 @@ MessageScreen.navigationOptions = ({ navigation }) => ({
     ),
     headerTitle: () => (
         <TouchableOpacity onPress={() => {
-            navigation.navigate('Groups')
+            navigation.navigate('Members')
         }}>
-            <Text>{navigation.getParam('title', 'Chat')}</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 17, }}>{navigation.getParam('title', 'Chat')}</Text>
         </TouchableOpacity>
     ),
     //title: navigation.getParam('title', 'Chat'),
