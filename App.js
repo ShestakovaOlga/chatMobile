@@ -26,6 +26,7 @@ setGlobal({
   emojiActive: false,
   fullname: '',
   mail: '',
+  messages: [],
   password: '',
   img: null,
   connected: false

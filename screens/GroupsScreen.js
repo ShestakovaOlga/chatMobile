@@ -33,7 +33,7 @@ export default function GroupsScreen(props) {
             <FlatList
                 data={chats}
                 renderItem={({ item }) => <TouchableOpacity onPress={() => {
-                    setActiveChat(item.ID)
+                    setActiveChat(item.id)
                     props.navigation.navigate('Chat')
                 }}>
                     <View style={{
@@ -71,17 +71,6 @@ export default function GroupsScreen(props) {
 }
 
 GroupsScreen.navigationOptions = ({ navigation }) => ({
-    headerLeft: (
-        <TouchableOpacity onPress={async () => {
-            await Logout()
-            navigation.navigate('Login')
-        }}>
-            <AntDesign style={{
-                marginRight: 5,
-                transform: [{ rotate: '90deg' }]
-            }} name="select1" size={23} color={Colors.prinColor} />
-        </TouchableOpacity>
-    ),
     headerRight: (
         <TouchableOpacity onPress={() => {
             setGlobal({ showContacts: true })

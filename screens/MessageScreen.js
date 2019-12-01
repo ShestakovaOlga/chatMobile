@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useGlobal, setGlobal } from 'reactn';
-import { getMe, sendMessage } from '../server';
+import { getMe, sendMessage, getMessages } from '../server';
 import { GiftedChat } from 'react-native-gifted-chat';
 import {
     Image,
@@ -21,20 +21,29 @@ import { MaterialIcons } from '@expo/vector-icons';
 export default function MessageScreen(props) {
     const [chats, setChats] = useGlobal('chats')
     const [notifications] = useGlobal('notifications')
+    const [messages] = useGlobal('messages')
     const [logged] = useGlobal('logged')
     const [activeChat, setActiveChat] = useGlobal('activeChat')
     const [me] = useGlobal('me')
+    const [chat, setChat] = useState(null)
 
+    useEffect(() => {
+        console.warn('messages', messages);
+    }, [messages])
 
-    const chat = chats.find(chat => chat.ID === activeChat)
     useEffect(() => {
         getMe()
-    }, [me])
+    }, [])
     useEffect(() => {
-        props.navigation.setParams({
-            title: chat ? chat.name : 'Chat'
-        })
-        console.warn(chat.Messages);
+        if (!chat) {
+            const c = chats.find(chat => chat.id === activeChat)
+            setChat(c)
+            props.navigation.setParams({
+                title: chat ? chat.name : 'Chat'
+            })
+            console.warn("C", chats);
+            getMessages(c.id)
+        }
     }, [chat])
 
     return (
@@ -45,10 +54,10 @@ export default function MessageScreen(props) {
         }} >
             <GiftedChat
                 inverted={false}
-                messages={chat.Messages}
+                messages={messages}
                 onSend={messages => {
                     messages.map(m => {
-                        sendMessage(m.text, chat.ID)
+                        sendMessage(m.text, chat.id)
                     })
                 }}
                 user={me}
@@ -90,8 +99,8 @@ MessageScreen.navigationOptions = ({ navigation }) => ({
 
 
 function getUsername(chats, activeChat, message) {
-    const chat = chats.find(c => c.ID == activeChat)
-    const author = chat.members.find(m => m.ID == message.author)
+    const chat = chats.find(c => c.id == activeChat)
+    const author = chat.members.find(m => m.id == message.author)
     return author && author.name
 }
 

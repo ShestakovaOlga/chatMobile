@@ -61,7 +61,7 @@ export default function SelectContactScreen(props) {
                 <Text style={{ color: 'white' }}>Crear</Text>
             </TouchableOpacity>
         </View>}
-        {users.map((user) => <Contact key={user.ID} onChange={(checked) => {
+        {users.map((user) => <Contact key={user.id} onChange={(checked) => {
             if (checked) {
                 setSelected([
                     ...selected,

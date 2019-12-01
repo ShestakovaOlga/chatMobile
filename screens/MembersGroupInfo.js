@@ -19,7 +19,7 @@ export default function MembersGroupInfo(props) {
     const [activeChat, setActiveChat] = useGlobal('activeChat')
     const [users, setUsers] = useGlobal('users')
 
-    const chat = chats.find(chat => chat.ID === activeChat)
+    const chat = chats.find(chat => chat.id === activeChat)
     useEffect(() => {
         props.navigation.setParams({
             title: chat ? chat.name : 'Chat'

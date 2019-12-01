@@ -11,19 +11,20 @@ export function sendMessage(message, ID) {
             text: message,
             chatID: ID
         }
-    }));
-    // fetch(`${host}/newmessage?id=${ID}`, {
-    //     credentials: "include",
-    //     method: 'POST',
-    //     body: JSON.stringify({
-    //         text: message,
-    //     }),
-    //     headers: {
-    //         'Content-type': 'application/json',
-    //         origin: window.location.host
-    //     }
-    // })
+    }))
 }
+
+
+export function getMessages(chatID) {
+    socket.send(JSON.stringify({
+        command: 'messages',
+        payload: {
+            chatID: chatID
+        }
+    }))
+}
+
+
 
 //sacar los contactos
 export function Users() {
@@ -169,9 +170,9 @@ export async function avatar(avatar) { //mandar avatar
     }));
 }
 
-
+const ws = 'ws://192.168.1.10:8081/ws'
 //const ws = 'ws://c7252baf.ngrok.io/ws'
-const ws = 'wss://chat.galax.be/ws'
+//const ws = 'wss://chat.galax.be/ws'
 
 
 // Crea una nueva conexión.
@@ -218,7 +219,10 @@ function gotServerMessage(msg) {    //servidor manda los mensajes
             break;
         case 'users':
             setGlobal({
-                users: msg.payload.users
+                users: msg.payload.users.map(m => ({
+                    ...m,
+                    _id: m.id
+                }))
             })
             break;
         case 'check':
@@ -226,9 +230,17 @@ function gotServerMessage(msg) {    //servidor manda los mensajes
                 logged: true
             })
             break;
+        case 'messages':
+            setGlobal({
+                messages: msg.payload.messages
+            })
+            break;
         case 'me':
             setGlobal({
-                me: msg.payload.me
+                me: {
+                    ...msg.payload.me,
+                    _id: msg.payload.me.id
+                }
             })
             break;
         case 'chats':
@@ -264,12 +276,17 @@ function gotServerMessage(msg) {    //servidor manda los mensajes
             break;
         case 'message':
             const g = getGlobal()
-            const chat = g.chats.find(chat => chat.ID === msg.payload.message.chatID)
+            const chat = g.chats.find(chat => chat.id === msg.payload.message.chatID)
             if (chat) {
-                chat.Messages.push(msg.payload.message)
+                setGlobal(g => ({
+                    messages: [
+                        ...g.messages,
+                        msg.payload.message
+                    ]
+                }))
             }
             setGlobal({
-                chats: [...g.chats.filter(chat => chat.ID !== msg.payload.message.chatID), chat],
+                chats: [...g.chats.filter(chat => chat.id !== msg.payload.message.chatID), chat],
                 // notifications: {
                 //     [chat.ID]: g.notifications[chat.ID] ? g.notifications[chat.ID] + 1 : 1
                 // }
