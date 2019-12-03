@@ -18,7 +18,6 @@ import Colors from '../constants/Colors';
 export default function Checkbox(props) {
     return <TouchableOpacity onPress={() => {
         props.onChange(!props.checked)
-        console.warn(props.checked);
 
     }} style={{
         width: 35,

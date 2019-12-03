@@ -203,7 +203,11 @@ function connect() {
 
     // Escucha por mensajes
     socket.addEventListener('message', function (event) {
-        gotServerMessage(JSON.parse(event.data))
+        try {
+            gotServerMessage(JSON.parse(event.data))
+        } catch (e) {
+            console.log(event.data);
+        }
     });
 }
 
