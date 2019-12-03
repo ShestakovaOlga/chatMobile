@@ -27,9 +27,6 @@ export default function MessageScreen(props) {
     const [me] = useGlobal('me')
     const [chat, setChat] = useState(null)
 
-    useEffect(() => {
-        console.warn('messages', messages);
-    }, [messages])
 
     useEffect(() => {
         getMe()
@@ -39,11 +36,12 @@ export default function MessageScreen(props) {
             const c = chats.find(chat => chat.id === activeChat)
             setChat(c)
             props.navigation.setParams({
-                title: chat ? chat.name : 'Chat'
+                title: c.name
             })
-            console.warn("C", chats);
             getMessages(c.id)
         }
+        console.warn(chat);
+
     }, [chat])
 
     return (

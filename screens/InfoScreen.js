@@ -10,8 +10,10 @@ import {
   InputEvent,
 } from 'react-native';
 
+
 export default function InfoScreen() {
   const [me] = useGlobal('me')
+  const [img, setImg] = useGlobal('img')
   const [showSelectimg, setShowSelectimg] = useGlobal('showSelectimg')
   const [showSettings, setShowSettings] = useGlobal('showSettings')
 

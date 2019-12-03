@@ -17,7 +17,7 @@ import Checkbox from './Checkbox'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function Contact(props) {
-    return <View>
+    return <View style={{ marginVertical: 15 }}>
         <View style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -48,6 +48,7 @@ export default function Contact(props) {
                     <Text style={{
                         marginLeft: 20,
                         fontWeight: 'bold',
+                        fontSize: 17
                     }}>{props.name}</Text>
                     <Text style={{
                         marginLeft: 20,

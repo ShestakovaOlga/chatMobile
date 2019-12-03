@@ -24,7 +24,6 @@ export default function MembersGroupInfo(props) {
         props.navigation.setParams({
             title: chat ? chat.name : 'Chat'
         })
-        console.warn(chat.Messages);
     }, [chat])
     return (
         <ScrollView>

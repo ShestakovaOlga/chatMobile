@@ -53,7 +53,7 @@ export default function SelectContactScreen(props) {
                 backgroundColor: disabled ? 'gray' : '#815ae6',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: 10,
+                margin: 20,
             }} disabled={disabled} onPress={() => {
                 CreateGroup(chatname === '' ? users.find((user) => user.email === selected[0]).name : chatname, selected)
                 props.navigation.navigate('Groups')
@@ -61,6 +61,7 @@ export default function SelectContactScreen(props) {
                 <Text style={{ color: 'white' }}>Crear</Text>
             </TouchableOpacity>
         </View>}
+
         {users.map((user) => <Contact key={user.id} onChange={(checked) => {
             if (checked) {
                 setSelected([
