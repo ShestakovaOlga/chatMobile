@@ -14,6 +14,19 @@ export function sendMessage(message, ID) {
     }))
 }
 
+export function modifyUser(id, name, email, password, company, role) {
+    socket.send(JSON.stringify({
+        command: 'modifyuser',
+        payload: {
+            id,
+            name,
+            email,
+            password,
+            company,
+            role,
+        }
+    }))
+}
 
 export function getMessages(chatID) {
     socket.send(JSON.stringify({
@@ -33,21 +46,6 @@ export function Users() {
     }));
 }
 
-//recebir mensajes
-// export async function getMessages(ID) {
-//     socket.send(JSON.stringify({
-//         command: 'messages',
-//         payload: {
-//             ID
-//         }
-//     }));
-// const res = await fetch(`${host}/messages?id=${ID}`, {
-//     credentials: "include",
-//     origin: window.location.host
-// })
-// const data = await res.json()
-// if (data) setGlobal({ messages: data })
-//}
 
 //iniciar sesion
 export async function login(email, password) {
@@ -60,16 +58,6 @@ export async function login(email, password) {
             pushToken: ids.userId
         }
     }));
-
-
-    // try {
-    //     ids = await OneSignal.getUserId()
-    // } catch (e) {
-    //     console.log(e);
-    // }
-    // console.log('after ids');
-
-
 }
 
 //registrarse
@@ -83,26 +71,6 @@ export async function sendSignup(name, email, password, avatar) {
             avatar
         }
     }));
-    // try {
-    //     await fetch(`${host}/newuser`, {
-    //         credentials: "include",
-    //         method: 'POST',
-    //         body: JSON.stringify({
-    //             name,
-    //             email,
-    //             password,
-    //             avatar
-    //         }),
-    //         headers: {
-    //             'Content-type': 'application/json',
-    //             origin: window.location.host
-    //         }
-    //     })
-    //     console.log('user was created');
-
-    // } catch (er) {
-    //     console.log(er);
-    // }
 }
 
 
@@ -119,25 +87,6 @@ export async function CreateGroup(name, members) { //crear un grupo
             members: members
         }
     }));
-    // try {
-    //     await fetch(`${host}/newchat`, {
-    //         credentials: "include",
-    //         method: 'POST',
-    //         body: JSON.stringify({
-    //             name: name,
-    //             members: members
-    //         }),
-    //         headers: {
-    //             'Content-type': 'application/json',
-    //             origin: window.location.host
-    //         }
-    //     })
-    //     console.log('chat was created');
-    //     getChats()
-
-    // } catch (er) {
-    //     console.log(er);
-    // }
 }
 
 export async function getChats() {  //traerse los chats
@@ -229,6 +178,13 @@ function gotServerMessage(msg) {    //servidor manda los mensajes
                 }))
             })
             break;
+        case 'open':
+            if (msg.payload.chat) {
+                setGlobal({
+                    activeChat: msg.payload.chat
+                })
+            }
+            break;
         case 'check':
             setGlobal({
                 logged: true
@@ -257,17 +213,20 @@ function gotServerMessage(msg) {    //servidor manda los mensajes
                 logged: false
             })
             break;
-        case 'notification':
-            Alert.alert(
-                msg.payload.msg,
-                '',
-                [
-                    { text: 'OK' },
-                ],
-                { cancelable: true },
-            );
-            // swal(msg.payload.msg, '', msg.payload.isError ? "error" : "success");
-            // msg.payload.isError
+        case 'loginerror':
+            setGlobal({
+                loginerror: msg.payload.error
+            })
+            break;
+        case 'registererror':
+            setGlobal({
+                registererror: msg.payload.error,
+            })
+            break;
+        case 'chatexists':
+            setGlobal({
+                chatexists: msg.payload.error
+            })
             break;
         case 'notifications':
             const n = msg.payload.notifications.filter(n => !n.read)

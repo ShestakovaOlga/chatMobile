@@ -9,6 +9,9 @@ import {
   View,
   InputEvent,
 } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
+import Colors from '../constants/Colors';
+import { Calendar } from 'react-native-calendars';
 
 
 export default function InfoScreen() {
@@ -34,6 +37,10 @@ export default function InfoScreen() {
       <View style={{
         flexDirection: 'row',
         alignItems: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: Colors.prinColorLight,
+        marginBottom: 15,
+        backgroundColor: Colors.prinColorLight,
       }}>
         <Image style={{
           width: 60,
@@ -48,11 +55,71 @@ export default function InfoScreen() {
           justifyContent: 'center',
         }} >{me.name}</Text>
       </View>
-      <View>
-        <Text>Email:</Text>
-        <Text>Nombre de la empresa:</Text>
-        <Text>Puesto:</Text>
-        <Text>Horario:</Text>
+
+      <View >
+        <View style={{
+          flexDirection: 'row',
+        }}>
+          <Text style={{ fontSize: 16, }}>Email:</Text>
+          <Text style={{
+            fontSize: 15,
+            fontWeight: 'bold',
+            marginLeft: 10,
+          }}>{me.email}</Text>
+        </View>
+        <View style={{
+          marginTop: 10,
+          marginBottom: 10,
+          marginLeft: 50,
+          borderBottomWidth: 1,
+          borderBottomColor: Colors.prinColorLight,
+        }}></View>
+        <View style={{
+          flexDirection: 'row',
+        }}>
+          <Text>Empresa:</Text>
+          <Text style={{
+            fontSize: 15,
+            fontWeight: 'bold',
+            marginLeft: 10,
+          }}> {me.company}</Text>
+        </View>
+        <View style={{
+          marginTop: 10,
+          marginBottom: 10,
+          marginLeft: 50,
+          borderBottomWidth: 1,
+          borderBottomColor: Colors.prinColorLight,
+        }}></View>
+        <View style={{
+          flexDirection: 'row',
+        }}>
+          <Text>Puesto:</Text>
+          <Text style={{
+            fontSize: 15,
+            fontWeight: 'bold',
+            marginLeft: 10,
+          }}> {me.role}</Text>
+        </View>
+        <View style={{
+          marginTop: 10,
+          marginBottom: 10,
+          marginLeft: 50,
+          borderBottomWidth: 1,
+          borderBottomColor: Colors.prinColorLight,
+        }}></View>
+
+        <View style={{
+          flexDirection: 'row',
+        }}>
+          <Text>Horario:</Text>
+          <Text style={{
+            fontSize: 15,
+            fontWeight: 'bold',
+            marginLeft: 10,
+          }}>De Lun a Vie, 8:00 - 15:00</Text>
+        </View>
+        <Calendar />
       </View>
     </ScrollView>
   );
