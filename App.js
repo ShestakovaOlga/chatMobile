@@ -20,7 +20,6 @@ setGlobal({
   mode: 'pc',
   me: null,
   showSelectimg: false,
-  showSettings: false,
   notifications: {},
   text: '',
   emojiActive: false,
@@ -29,6 +28,8 @@ setGlobal({
   messages: [],
   password: '',
   img: null,
+  loginerror: '',
+  registererror: '',
   connected: false
 })
 

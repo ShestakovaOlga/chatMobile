@@ -19,6 +19,7 @@ export default function SignupScreen(props) {
     const [mail, setMail] = useGlobal('mail')
     const [password, setPassword] = useGlobal('password')
     const [img, setImg] = useGlobal('img')
+    const [registererror] = useGlobal('registererror')
 
     return (
         <View style={{
@@ -64,7 +65,6 @@ export default function SignupScreen(props) {
                     }}
                     autoCapitalize='none'
                     placeholder='Nombre'
-                    textContentType='username'
                     autoComplete='username'
                     value={fullname}>
                 </TextInput>
@@ -79,7 +79,6 @@ export default function SignupScreen(props) {
                     }}
                     autoCapitalize='none'
                     placeholder='Email'
-                    textContentType='email'
                     autoComplete='email'
                     value={mail}>
                 </TextInput>
@@ -93,11 +92,11 @@ export default function SignupScreen(props) {
                         borderBottomWidth: 1,
                     }}
                     placeholder='Contraseña'
-                    textContentType='password'
                     autoComplete='password'
                     secureTextEntry
                     value={password}>
                 </TextInput>
+                {registererror !== '' && <Text style={{ color: 'red' }}>{registererror}</Text>}
                 <AvatarSelect value={img} onChange={setImg} />
                 <TouchableOpacity
                     onPress={() => {

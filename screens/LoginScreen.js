@@ -20,6 +20,7 @@ export default function LoginScreen(props) {
   const [mail, setMail] = useState('')
   const [password, setPassword] = useState('')
   const [logged] = useGlobal('logged')
+  const [loginerror] = useGlobal('loginerror')
 
   useEffect(() => {
     if (logged) {
@@ -71,7 +72,6 @@ export default function LoginScreen(props) {
           }}
           autoCapitalize='none'
           placeholder='Email'
-          textContentType='email'
           value={mail}>
         </TextInput>
         <TextInput
@@ -85,11 +85,11 @@ export default function LoginScreen(props) {
             margin: 15
           }}
           placeholder='Contraseña'
-          textContentType='password'
           autoComplete='password'
           secureTextEntry
           value={password}>
         </TextInput>
+        {loginerror !== '' && <Text style={{ color: 'red', marginBottom: 10, fontSize: 17 }}>{loginerror}</Text>}
         <TouchableOpacity
           onPress={() => {
             login(mail, password)

@@ -24,6 +24,11 @@ export default function GroupsScreen(props) {
     const [showMenu, setShowMenu] = useGlobal('showMenu')
     const [showContacts] = useGlobal('showContacts')
 
+    useEffect(() => {
+        if (activeChat) {
+            props.navigation.navigate('Chat')
+        }
+    }, [activeChat])
 
     useEffect(() => {
         getChats()
