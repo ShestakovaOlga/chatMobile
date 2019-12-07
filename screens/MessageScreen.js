@@ -92,7 +92,7 @@ MessageScreen.navigationOptions = ({ navigation }) => ({
             <Text style={{ fontWeight: 'bold', fontSize: 17, }}>{navigation.getParam('title', 'Chat')}</Text>
         </TouchableOpacity>
     ),
-    //title: navigation.getParam('title', 'Chat'),
+    title: navigation.getParam('title', 'Chat'),
 });
 
 
