@@ -18,7 +18,6 @@ export default function SignupScreen(props) {
     const [fullname, setFullname] = useGlobal('fullname')
     const [mail, setMail] = useGlobal('mail')
     const [password, setPassword] = useGlobal('password')
-    const [img, setImg] = useGlobal('img')
     const [registererror] = useGlobal('registererror')
 
     return (
@@ -97,10 +96,9 @@ export default function SignupScreen(props) {
                     value={password}>
                 </TextInput>
                 {registererror !== '' && <Text style={{ color: 'red' }}>{registererror}</Text>}
-                <AvatarSelect value={img} onChange={setImg} />
                 <TouchableOpacity
                     onPress={() => {
-                        sendSignup(fullname, mail, password, img)
+                        sendSignup(fullname, mail, password)
                         props.navigation.navigate('Login')
                         setFullname('')
                         setMail('')

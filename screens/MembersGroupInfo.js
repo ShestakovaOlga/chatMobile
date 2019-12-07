@@ -48,6 +48,10 @@ export default function MembersGroupInfo(props) {
                             fontSize: 20,
                             fontWeight: 'bold',
                         }} >{item.name}</Text>
+                        <Text style={{
+                            marginLeft: 20,
+                            color: Colors.graylight,
+                        }}>{item.role}</Text>
                     </View>
                 </View>}
             >

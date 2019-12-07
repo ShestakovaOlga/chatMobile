@@ -9,10 +9,10 @@ import {
     InputEvent
 } from 'react-native';
 import Colors from '../constants/Colors';
-import { Logout, getMe, modifyUser } from '../server';
+import { Logout, getMe, modifyUser, getAvatar } from '../server';
 import AvatarSelect from '../components/AvatarSelect'
 import { TextInput } from 'react-native-gesture-handler';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
 
 export default function SettingsScreen(props) {
     const [me] = useGlobal('me')
@@ -34,6 +34,7 @@ export default function SettingsScreen(props) {
             setEmail(me.email)
             setCompany(me.company)
             setRole(me.role)
+            setImg(getAvatar(me.id))
         }
     }, [me])
 
@@ -45,10 +46,11 @@ export default function SettingsScreen(props) {
                 email,
                 password,
                 company,
-                role
+                role,
+                img
             })
         }
-    }, [name, password, email, company, role])
+    }, [name, password, email, company, role, img])
 
     if (!me) {
         return <View style={{
@@ -76,8 +78,13 @@ export default function SettingsScreen(props) {
     const labelStyle = {
         marginLeft: 20,
         marginTop: 30,
-        fontSize: 15,
-        color: Colors.prinColor
+        flexDirection: 'row',
+        alignItems: 'center'
+    }
+    const textLabelStyle = {
+        paddingLeft: 5,
+        color: Colors.prinColor,
+        fontSize: 16,
     }
     return (
         <ScrollView style={{
@@ -85,27 +92,18 @@ export default function SettingsScreen(props) {
             height: '100%',
         }} >
 
-            <TouchableOpacity style={{
+            <View style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 backgroundColor: 'white',
             }}>
-                {/* <TouchableOpacity onPress={() => {
-                    <AvatarSelect value={img} onChange={setImg} />
-                }}>
-                </TouchableOpacity> */}
-                <Image style={{
-                    width: 60,
-                    height: 60,
-                    marginHorizontal: 5,
-                    borderRadius: 30,
-                }} source={{ uri: me.avatar }} />
+                <AvatarSelect value={img} onChange={setImg} />
                 <TextInput onChangeText={setName} style={{
                     ...inputStyle,
                     flex: 1,
                     marginRight: 10,
                 }} value={name}></TextInput>
-            </TouchableOpacity>
+            </View>
             <Text style={{ color: Colors.graylight, marginLeft: 10 }}>Edita el nombre pulsándolo</Text>
 
             <TouchableOpacity onPress={() => {
@@ -121,20 +119,37 @@ export default function SettingsScreen(props) {
             </TouchableOpacity>
 
             {showEdit && <>
-                <Text style={labelStyle}>Email</Text>
+
+
+                <View style={labelStyle}>
+                    <Entypo name="email" size={19} color={Colors.prinColor} />
+                    <Text style={textLabelStyle} >Email</Text>
+                </View>
+
                 <TextInput onChangeText={setEmail} style={inputStyle} value={email}></TextInput>
                 <Text style={{ marginLeft: 10, color: Colors.graylight, }}>Edita el email pulsándolo</Text>
 
 
-                <Text style={labelStyle}>Empresa</Text>
+                <View style={labelStyle}>
+                    <Ionicons name="ios-people" size={27} color={Colors.companyIcon} />
+                    <Text style={textLabelStyle}>Empresa</Text>
+                </View>
                 <TextInput onChangeText={setCompany} style={inputStyle} value={company}></TextInput>
                 <Text style={{ marginLeft: 10, color: Colors.graylight, }}>Edita el nombre de la empresa pulsándolo</Text>
 
-                <Text style={labelStyle}>Puesto</Text>
+
+                <View style={labelStyle}>
+                    <MaterialIcons name="person-pin" size={25} color={Colors.roleIcon} />
+                    <Text style={textLabelStyle}>Puesto</Text>
+                </View>
                 <TextInput onChangeText={setRole} style={inputStyle} value={role}></TextInput>
                 <Text style={{ marginLeft: 10, color: Colors.graylight, }}>Edita el nombre del puesto pulsándolo</Text>
 
-                <Text style={labelStyle}>Contraseña</Text>
+
+                <View style={labelStyle}>
+                    <Ionicons name="md-key" size={27} color={Colors.passwordIcon} style={{ marginLeft: 2 }} />
+                    <Text style={textLabelStyle}>Contraseña</Text>
+                </View>
                 <TextInput onChangeText={setPassword} style={inputStyle} value={password} placeholder='Nueva contraseña'></TextInput>
                 <TextInput onChangeText={setRepeatpassword} style={inputStyle} value={repeatpassword} placeholder='Repetir contraseña'></TextInput>
             </>}
@@ -171,7 +186,8 @@ SettingsScreen.navigationOptions = ({ navigation }) => ({
                 navigation.getParam('email', ''),
                 navigation.getParam('password', ''),
                 navigation.getParam('company', ''),
-                navigation.getParam('role', '')
+                navigation.getParam('role', ''),
+                navigation.getParam('img', ''),
             )
             navigation.navigate('Info')
         }} style={{

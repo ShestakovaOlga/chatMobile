@@ -14,7 +14,7 @@ export function sendMessage(message, ID) {
     }))
 }
 
-export function modifyUser(id, name, email, password, company, role) {
+export function modifyUser(id, name, email, password, company, role, img) {
     socket.send(JSON.stringify({
         command: 'modifyuser',
         payload: {
@@ -26,6 +26,9 @@ export function modifyUser(id, name, email, password, company, role) {
             role,
         }
     }))
+    if (img) {
+        uploadAvatar(img)
+    }
 }
 
 export function getMessages(chatID) {
@@ -37,7 +40,38 @@ export function getMessages(chatID) {
     }))
 }
 
+export async function uploadAvatar(file) {
+    const token = await AsyncStorage.getItem('token')
+    const data = new FormData()
+    data.append('file', file)
+    data.append('token', token)
 
+    fetch(url + '/avatar', {
+        method: 'POST',
+        body: data
+    })
+}
+
+export async function uploadChatAvatar(file, chatId) {
+    const token = await AsyncStorage.getItem('token')
+    const data = new FormData()
+    data.append('file', file)
+    data.append('token', token)
+    data.append('chatid', chatId)
+
+    fetch(url + '/chatavatar', {
+        method: 'POST',
+        body: data
+    })
+}
+
+export function getAvatar(userId) {
+    return { uri: `${url}/${userId}.png` }
+}
+
+export function getChatAvatar(chatId) {
+    return { uri: `${url}/chats/${chatId}.png` }
+}
 
 //sacar los contactos
 export function Users() {
@@ -61,14 +95,13 @@ export async function login(email, password) {
 }
 
 //registrarse
-export async function sendSignup(name, email, password, avatar) {
+export async function sendSignup(name, email, password) {
     socket.send(JSON.stringify({
         command: 'newuser',
         payload: {
             name: name,
             email: email,
             password: password,
-            avatar
         }
     }));
 }
@@ -77,6 +110,9 @@ export async function sendSignup(name, email, password, avatar) {
 export async function Logout() {  //cerrar la sesion
     await AsyncStorage.removeItem('token')
     setGlobal({ logged: false })
+    socket.close()
+    socket = new WebSocket(ws)
+    connect()
 }
 
 export async function CreateGroup(name, members) { //crear un grupo
@@ -110,15 +146,8 @@ export async function getMe() {  //traer los datos del usuario
     }));
 }
 
-export async function avatar(avatar) { //mandar avatar
-    socket.send(JSON.stringify({
-        command: 'avatar',
-        payload: {
-            avatar
-        }
-    }));
-}
 
+const url = 'http://192.168.1.10:8081'
 const ws = 'ws://192.168.1.10:8081/ws'
 //const ws = 'ws://c7252baf.ngrok.io/ws'
 //const ws = 'wss://chat.galax.be/ws'
@@ -186,9 +215,12 @@ function gotServerMessage(msg) {    //servidor manda los mensajes
             }
             break;
         case 'check':
-            setGlobal({
-                logged: true
-            })
+            setTimeout(() => {
+                setGlobal({
+                    logged: true
+                })
+            }, 1000)
+
             break;
         case 'messages':
             setGlobal({

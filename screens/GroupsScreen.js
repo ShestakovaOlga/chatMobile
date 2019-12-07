@@ -55,6 +55,8 @@ export default function GroupsScreen(props) {
                         <View style={{
                             justifyContent: 'center',
                             flexGrow: 1,
+                            borderBottomWidth: 1,
+                            borderBottomColor: Colors.prinColorLight,
                         }}>
                             <Text style={{
                                 fontSize: 20,
@@ -82,7 +84,7 @@ GroupsScreen.navigationOptions = ({ navigation }) => ({
             navigation.navigate('Contacts')
         }}>
             <AntDesign style={{
-                marginRight: 5,
+                marginRight: 15,
                 transform: [{ rotate: '90deg' }]
             }} name="select1" size={23} color={Colors.prinColor} />
         </TouchableOpacity>

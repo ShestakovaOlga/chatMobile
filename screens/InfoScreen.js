@@ -1,5 +1,5 @@
 import React, { useState, useGlobal, useEffect } from 'reactn';
-import { getMe } from '../server';
+import { getMe, getAvatar } from '../server';
 import {
   ScrollView,
   Image,
@@ -12,6 +12,7 @@ import {
 import { TextInput } from 'react-native-gesture-handler';
 import Colors from '../constants/Colors';
 import { Calendar } from 'react-native-calendars';
+import { MaterialIcons, AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
 
 
 export default function InfoScreen() {
@@ -27,7 +28,18 @@ export default function InfoScreen() {
   if (!me) {
     return null
   }
-
+  const lineViewStyle = {
+    marginTop: 5,
+    marginBottom: 30,
+    marginLeft: 35,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.prinColorLight,
+  }
+  const viewTextStyle = {
+    flexDirection: 'row',
+    marginLeft: 3,
+    alignItems: 'center'
+  }
   return (
     <ScrollView style={{
       flex: 1,
@@ -39,15 +51,14 @@ export default function InfoScreen() {
         alignItems: 'center',
         borderBottomWidth: 1,
         borderBottomColor: Colors.prinColorLight,
-        marginBottom: 15,
-        backgroundColor: Colors.prinColorLight,
+        marginBottom: 25,
       }}>
         <Image style={{
           width: 60,
           height: 60,
           marginHorizontal: 5,
           borderRadius: 30,
-        }} source={{ uri: me.avatar }} />
+        }} source={getAvatar(me.id)} />
         <Text style={{
           fontSize: 20,
           fontWeight: 'bold',
@@ -57,68 +68,51 @@ export default function InfoScreen() {
       </View>
 
       <View >
-        <View style={{
-          flexDirection: 'row',
-        }}>
-          <Text style={{ fontSize: 16, }}>Email:</Text>
+        <View style={viewTextStyle}>
+          <Entypo name="email" size={20} color={Colors.prinColor} />
           <Text style={{
             fontSize: 15,
             fontWeight: 'bold',
             marginLeft: 10,
           }}>{me.email}</Text>
         </View>
-        <View style={{
-          marginTop: 10,
-          marginBottom: 10,
-          marginLeft: 50,
-          borderBottomWidth: 1,
-          borderBottomColor: Colors.prinColorLight,
-        }}></View>
+        <View style={lineViewStyle}></View>
         <View style={{
           flexDirection: 'row',
+          marginLeft: 3,
+          alignItems: 'center'
         }}>
-          <Text>Empresa:</Text>
+          <Ionicons name="ios-people" size={27} color={Colors.companyIcon} />
           <Text style={{
             fontSize: 15,
             fontWeight: 'bold',
             marginLeft: 10,
           }}> {me.company}</Text>
         </View>
-        <View style={{
-          marginTop: 10,
-          marginBottom: 10,
-          marginLeft: 50,
-          borderBottomWidth: 1,
-          borderBottomColor: Colors.prinColorLight,
-        }}></View>
-        <View style={{
-          flexDirection: 'row',
-        }}>
-          <Text>Puesto:</Text>
+        <View style={lineViewStyle}></View>
+        <View style={viewTextStyle}>
+          <MaterialIcons name="person-pin" size={25} color={Colors.roleIcon} />
           <Text style={{
             fontSize: 15,
             fontWeight: 'bold',
             marginLeft: 10,
           }}> {me.role}</Text>
         </View>
-        <View style={{
-          marginTop: 10,
-          marginBottom: 10,
-          marginLeft: 50,
-          borderBottomWidth: 1,
-          borderBottomColor: Colors.prinColorLight,
-        }}></View>
+        <View style={lineViewStyle}></View>
 
-        <View style={{
-          flexDirection: 'row',
-        }}>
-          <Text>Horario:</Text>
+        <View style={viewTextStyle}>
+          <AntDesign name="clockcircleo" size={20} color={Colors.workhoursIcon} />
           <Text style={{
             fontSize: 15,
             fontWeight: 'bold',
             marginLeft: 10,
           }}>De Lun a Vie, 8:00 - 15:00</Text>
         </View>
+        <View style={{
+          ...lineViewStyle,
+          marginLeft: 3,
+        }}></View>
+
         <Calendar />
       </View>
     </ScrollView>

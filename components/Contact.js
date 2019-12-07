@@ -15,6 +15,7 @@ import {
 import Colors from '../constants/Colors';
 import Checkbox from './Checkbox'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { getAvatar } from '../server';
 
 export default function Contact(props) {
     return <View style={{ marginVertical: 15 }}>
@@ -25,7 +26,7 @@ export default function Contact(props) {
             borderBottomColor: '#F4F4F5',
         }}>
 
-            {props.avatar ? <View style={{
+            <View style={{
                 width: 50,
                 marginRight: 5,
                 color: '#815ae6',
@@ -35,8 +36,8 @@ export default function Contact(props) {
                     height: 60,
                     borderRadius: 30,
                     margin: 5
-                }} source={{ uri: props.avatar }} alt="img" />
-            </View> : <Text>Icono</Text>}
+                }} source={getAvatar(props.id)} alt="img" />
+            </View>
 
             <View style={{
                 display: 'flex',
@@ -53,7 +54,7 @@ export default function Contact(props) {
                     <Text style={{
                         marginLeft: 20,
                         color: Colors.graylight,
-                    }}>Puesto</Text>
+                    }}>{props.role}</Text>
                 </View>
             </View>
             <Checkbox onChange={props.onChange} checked={props.checked}

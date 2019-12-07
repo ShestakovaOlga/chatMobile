@@ -26,24 +26,22 @@ export default function AvatarSelect({ onChange, value }) {
         })()
     }, [])
     return <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <Image source={{ uri: value }} style={{ width: 50, height: 50, margin: 5, borderRadius: 25, }}></Image>
         <TouchableOpacity onPress={async () => {
             const res = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                base64: true,
+                allowsEditing: true
             })
+
             if (res.cancelled === false) {
-                onChange('data:image/jpeg;base64,' + res.base64)
+                let localUri = res.uri;
+                let filename = localUri.split('/').pop();
+                // Infer the type of the image
+                let match = /\.(\w+)$/.exec(filename);
+                let type = match ? `image/${match[1]}` : `image`;
+                onChange({ uri: localUri, name: filename, type })
             }
         }}>
-            <Text style={{
-                borderWidth: 1,
-                padding: 3,
-                borderRadius: 7,
-                borderColor: Colors.prinColor,
-                color: Colors.prinColor,
-            }}>Elegir imagen</Text>
+            <Image source={value} style={{ width: 50, height: 50, margin: 5, borderRadius: 25, }}></Image>
         </TouchableOpacity>
     </View>
 }
