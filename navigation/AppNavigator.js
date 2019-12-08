@@ -6,7 +6,7 @@ import MainTabNavigator from './MainTabNavigator';
 import MessageScreen from '../screens/MessageScreen';
 import SelectContactScreen from '../screens/SelectContactScreen';
 import MembersGroupInfo from '../screens/MembersGroupInfo';
-import NameChange from '../components/Ajustes/NameChange';
+import NameUserInfo from '../components/Ajustes/NameUserInfo';
 
 const ChatStack = createStackNavigator({
   Chat: MessageScreen
@@ -17,8 +17,8 @@ const SelectContact = createStackNavigator({
 const MembersGroup = createStackNavigator({
   Members: MembersGroupInfo
 })
-const NameChangeStack = createStackNavigator({
-  NameChange: NameChange
+const NameUserInfoStack = createStackNavigator({
+  NameUserInfo: NameUserInfo
 })
 export default createAppContainer(
   createSwitchNavigator({
@@ -30,6 +30,6 @@ export default createAppContainer(
     Chat: ChatStack,
     Contacts: SelectContact,
     Members: MembersGroup,
-    NameChange: NameChangeStack,
+    NameUserInfo: NameUserInfoStack,
   })
 );

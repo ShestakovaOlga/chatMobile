@@ -23,7 +23,7 @@ export default function InfoScreen() {
 
   useEffect(() => {
     getMe()
-  }, [])
+  }, [me])
 
   if (!me) {
     return null

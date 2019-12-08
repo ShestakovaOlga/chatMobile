@@ -97,7 +97,7 @@ export default function SettingsScreen(props) {
                 alignItems: 'center',
                 backgroundColor: 'white',
             }}>
-                <AvatarSelect value={img} onChange={setImg} />
+                <AvatarSelect allowed={me.id} value={img} onChange={setImg} />
                 <TextInput onChangeText={setName} style={{
                     ...inputStyle,
                     flex: 1,
