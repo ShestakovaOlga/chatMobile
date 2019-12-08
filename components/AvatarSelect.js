@@ -14,7 +14,7 @@ import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import Colors from '../constants/Colors';
 
-export default function AvatarSelect({ onChange, value }) {
+export default function AvatarSelect({ onChange, value, onError, allowed }) {
     useEffect(() => {
         (async () => {
             if (Constants.platform.ios) {
@@ -27,6 +27,7 @@ export default function AvatarSelect({ onChange, value }) {
     }, [])
     return <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         <TouchableOpacity onPress={async () => {
+            if (!allowed) return;
             const res = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true
@@ -41,7 +42,7 @@ export default function AvatarSelect({ onChange, value }) {
                 onChange({ uri: localUri, name: filename, type })
             }
         }}>
-            <Image source={value} style={{ width: 50, height: 50, margin: 5, borderRadius: 25, }}></Image>
+            <Image onError={onError} source={value} style={{ width: 50, height: 50, margin: 5, borderRadius: 25 }}></Image>
         </TouchableOpacity>
     </View>
 }
