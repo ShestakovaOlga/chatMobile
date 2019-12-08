@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useGlobal, setGlobal } from 'reactn';
-import { getMe, sendMessage, getMessages } from '../server';
+import { getMe, sendMessage, getMessages, getChatAvatar, getAvatar, sendMessageFile } from '../server';
 import { GiftedChat } from 'react-native-gifted-chat';
+import { Video } from 'expo-av';
 import {
     Image,
     Platform,
+    Alert,
     ScrollView,
     StyleSheet,
     Text,
@@ -16,16 +18,21 @@ import {
     StatusBar
 } from 'react-native';
 import Colors from '../constants/Colors';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
 
 export default function MessageScreen(props) {
     const [chats, setChats] = useGlobal('chats')
     const [notifications] = useGlobal('notifications')
     const [messages] = useGlobal('messages')
-    const [logged] = useGlobal('logged')
+    const [users] = useGlobal('users')
     const [activeChat, setActiveChat] = useGlobal('activeChat')
     const [me] = useGlobal('me')
     const [chat, setChat] = useState(null)
+    const [selectedUserInfo, setSelectedUserInfo] = useGlobal('selectedUserInfo')
+    const [attach, setAttach] = useState(null)
 
 
     useEffect(() => {
@@ -34,15 +41,27 @@ export default function MessageScreen(props) {
     useEffect(() => {
         if (!chat) {
             const c = chats.find(chat => chat.id === activeChat)
-            setChat(c)
-            props.navigation.setParams({
-                title: c.name
-            })
-            getMessages(c.id)
+            if (c) {
+                setChat(c)
+                props.navigation.setParams({
+                    title: c.name,
+                    id: c.id,
+                })
+                getMessages(c.id)
+                const chatUsers = users ? users.filter(u => u.chats.includes(c.id)) : []
+                if (!c.isGroup) {
+                    props.navigation.setParams({
+                        isGroup: false,
+                        id: chatUsers.find((u) => {
+                            return u.id !== me.id
+                        }).id
+                    })
+                }
+            }
         }
         console.warn(chat);
 
-    }, [chat])
+    }, [chat, chats])
 
     return (
         <View style={{
@@ -51,6 +70,54 @@ export default function MessageScreen(props) {
             backgroundColor: Colors.prinColorLight,
         }} >
             <GiftedChat
+                renderActions={() => {
+                    return <TouchableOpacity
+                        onPress={async () => {
+                            const res = await ImagePicker.launchImageLibraryAsync({
+                                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                                allowsEditing: true
+                            })
+
+                            if (res.cancelled === false) {
+                                let localUri = res.uri;
+                                let filename = localUri.split('/').pop();
+                                // Infer the type of the image
+                                let match = /\.(\w+)$/.exec(filename);
+                                let type
+                                let kind
+                                if (['png', 'jpg', 'jpeg', 'gif'].includes(match[1])) {
+                                    type = match ? `image/${match[1]}` : `image`;
+                                    kind = 'image'
+                                }
+                                if (['mp4', 'webm', 'mov'].includes(match[1])) {
+                                    type = match ? `video/${match[1]}` : `video`;
+                                    kind = 'video'
+                                }
+                                if (!type) {
+                                    Alert.alert('Error', 'Tipo de archivo no soportado ' + match[1])
+                                    return
+                                }
+                                const file = { uri: localUri, name: filename, type }
+                                sendMessageFile(chat.id, kind == 'image' && file, kind == 'video' && file, match[1])
+                            }
+                        }}
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '100%',
+                            marginLeft: 5
+                        }}>
+                        <Ionicons name="ios-add-circle-outline" size={30} color={Colors.prinColor} />
+                    </TouchableOpacity>
+                }}
+                renderMessageVideo={m => {
+                    console.warn('VIDEO', m);
+
+                    return <Video source={{ uri: m.currentMessage.video }} shouldPlay style={{
+                        width: 100,
+                        height: 80
+                    }}></Video>
+                }}
                 inverted={false}
                 messages={messages}
                 onSend={messages => {
@@ -78,18 +145,32 @@ export default function MessageScreen(props) {
 
 MessageScreen.navigationOptions = ({ navigation }) => ({
     headerLeft: (
-        <TouchableOpacity onPress={() => {
-            setGlobal({ activeChat: false })
-            navigation.navigate('Groups')
-        }}>
-            <MaterialIcons name="keyboard-arrow-left" size={32} color={Colors.prinColor} />
-        </TouchableOpacity>
+        <>
+            <TouchableOpacity onPress={() => {
+                setGlobal({ activeChat: false })
+                navigation.navigate('Groups')
+            }}>
+                <MaterialIcons name="keyboard-arrow-left" size={32} color={Colors.prinColor} />
+            </TouchableOpacity>
+
+        </>
     ),
     headerTitle: () => (
-        <TouchableOpacity onPress={() => {
-            navigation.navigate('Members')
+        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => {
+            if (navigation.getParam('isGroup', true)) {
+                navigation.navigate('Members')
+            } else {
+                setGlobal({ selectedUserInfo: navigation.getParam('id', '') })
+                navigation.navigate('NameUserInfo')
+            }
         }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 17, }}>{navigation.getParam('title', 'Chat')}</Text>
+            <Image style={{
+                width: 40,
+                height: 40,
+                marginRight: 10,
+                borderRadius: 20,
+            }} source={navigation.getParam('isGroup', true) ? getChatAvatar(navigation.getParam('id', '')) : getAvatar(navigation.getParam('id', ''))} />
+            <Text style={{ fontWeight: 'bold', fontSize: 17, flex: 1 }}>{navigation.getParam('title', 'Chat')}</Text>
         </TouchableOpacity>
     ),
     title: navigation.getParam('title', 'Chat'),

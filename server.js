@@ -40,6 +40,15 @@ export function getMessages(chatID) {
     }))
 }
 
+export function pushToken(token) {
+    socket.send(JSON.stringify({
+        command: 'pushtoken',
+        payload: {
+            token
+        }
+    }))
+}
+
 export async function uploadAvatar(file) {
     const token = await AsyncStorage.getItem('token')
     const data = new FormData()
@@ -65,12 +74,36 @@ export async function uploadChatAvatar(file, chatId) {
     })
 }
 
+export async function sendMessageFile(chatId, image, video, ext) {
+    const token = await AsyncStorage.getItem('token')
+    const data = new FormData()
+    if (image) {
+        data.append('file', image)
+        data.append('type', 'image')
+    }
+    if (video) {
+        data.append('file', video)
+        data.append('type', 'video')
+    }
+    data.append('ext', ext)
+    data.append('token', token)
+    data.append('chatid', chatId)
+
+    fetch(url + '/sendmessagefile', {
+        method: 'POST',
+        body: data
+    })
+}
+
 export function getAvatar(userId) {
     return { uri: `${url}/${userId}.png` }
 }
 
 export function getChatAvatar(chatId) {
-    return { uri: `${url}/chats/${chatId}.png` }
+    if (chatId) {
+        return { uri: `${url}/chats/${chatId}.png` }
+    }
+    return { uri: `${url}/chats/chat.png` }
 }
 
 //sacar los contactos
@@ -224,7 +257,16 @@ function gotServerMessage(msg) {    //servidor manda los mensajes
             break;
         case 'messages':
             setGlobal({
-                messages: msg.payload.messages
+                messages: msg.payload.messages.map(m => {
+                    if (m.image) {
+                        m.image = url + m.image
+                    }
+                    if (m.video) {
+                        m.video = url + m.video
+                    }
+                    return m
+                })
+
             })
             break;
         case 'me':
