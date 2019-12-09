@@ -204,8 +204,8 @@ export function getTime(date) {
     return date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()
 }
 
-const url = 'https://chat.galax.be'
-const ws = 'wss://chat.galax.be/ws'
+const url = 'http://pc.galax.be:8081'
+const ws = 'ws://pc.galax.be:8081/ws'
 //const ws = 'ws://c7252baf.ngrok.io/ws'
 //const ws = 'wss://chat.galax.be/ws'
 
