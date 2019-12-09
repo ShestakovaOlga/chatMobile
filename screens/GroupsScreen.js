@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useGlobal, setGlobal } from 'reactn';
-import { getChats, Logout, pushToken, uploadChatAvatar, getChatAvatar, getAvatar, Users, getMe } from '../server';
+import { getChats, Logout, pushToken, uploadChatAvatar, getChatAvatar, getAvatar, Users, getMe, getTime } from '../server';
 import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 import {
     Image,
@@ -13,7 +13,6 @@ import {
     Button,
     FlatList,
 } from 'react-native';
-import { chatTime } from "../constants/Date";
 import Colors from '../constants/Colors';
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
@@ -26,6 +25,7 @@ export default function GroupsScreen(props) {
     const [showMenu, setShowMenu] = useGlobal('showMenu')
     const [users] = useGlobal('users')
     const [me] = useGlobal('me')
+
 
     useEffect(() => {
         getMe()
@@ -62,75 +62,106 @@ export default function GroupsScreen(props) {
             pushToken(token)
         })()
         Notifications.addListener((notification) => {
-            console.warn(notification.data);
-
-            setActiveChat(notification.data.chatId)
-            props.navigation.navigate('Chat')
+            if (notification.remote) {
+                setActiveChat(notification.data.chatId)
+                props.navigation.navigate('Chat')
+            }
         });
     }, [])
 
+    console.warn('notifications', notifications);
     return (
-        <ScrollView style={styles.container}>
-            <FlatList
-                data={chats}
-                renderItem={({ item }) => {
-                    const chatUsers = users ? users.filter(u => u.chats.includes(item.id)) : []
-                    console.warn('chatUsers', JSON.stringify(item, null, 2));
-
-                    return (<TouchableOpacity onPress={() => {
-                        setActiveChat(item.id)
-                        props.navigation.navigate('Chat')
-                    }}>
-                        <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            padding: 10,
+        <>
+            <ScrollView style={styles.container}>
+                <FlatList
+                    data={chats}
+                    renderItem={({ item }) => {
+                        const chatUsers = users ? users.filter(u => u.chats.includes(item.id)) : []
+                        if (!chatUsers) return null
+                        return (<TouchableOpacity onPress={() => {
+                            setActiveChat(item.id)
+                            props.navigation.navigate('Chat')
                         }}>
-                            <Image style={{
-                                width: 60,
-                                height: 60,
-                                marginHorizontal: 5,
-                                borderRadius: 30,
-                            }} source={item.isGroup ? getChatAvatar(item.id) : getAvatar(chatUsers.find((u) => {
-                                return u.id !== me.id
-                            }).id)} />
                             <View style={{
-                                justifyContent: 'center',
-                                flexGrow: 1,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                padding: 10,
                             }}>
-                                <Text style={{
-                                    fontSize: 20,
-                                    fontWeight: 'bold',
-                                }} >{item.name}</Text>
-                                <Text style={{
-                                    fontSize: 15,
-                                    color: '#BDC3C7',
-                                }}>{chatTime(item)}</Text>
+                                <Image style={{
+                                    width: 60,
+                                    height: 60,
+                                    marginHorizontal: 5,
+                                    borderRadius: 30,
+                                }} source={item.isGroup ? getChatAvatar(item.id) : getAvatar(chatUsers.find((u) => {
+                                    return u.id !== me.id
+                                }).id)} />
+                                <View style={{
+                                    justifyContent: 'center',
+                                    flexGrow: 1,
+                                }}>
+                                    <Text style={{
+                                        fontSize: 20,
+                                        fontWeight: 'bold',
+                                    }} >{item.name}</Text>
+                                    <Text style={{
+                                        fontSize: 15,
+                                        color: '#BDC3C7',
+                                    }}>{getTime(new Date(item.time))}</Text>
+                                </View>
+                                {notifications['chat' + item.id] && <View style={{
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: 10,
+                                    backgroundColor: Colors.prinColor,
+                                    alignItems: 'center'
+                                }}>
+                                    <Text style={{ color: 'white' }}>{notifications['chat' + item.id]}</Text>
+                                </View>}
+
+                                <MaterialIcons name="keyboard-arrow-right" size={32} color='#BDC3C7' />
                             </View>
-                            {/* <Text>Notificacion de mens nuevos</Text> */}
-                            <MaterialIcons name="keyboard-arrow-right" size={32} color='#BDC3C7' />
-                        </View>
-                    </TouchableOpacity>)
-                }}
-                keyExtractor={(chat) => 'chat' + chat._id}
-            >
-            </FlatList>
-        </ScrollView>
+                        </TouchableOpacity>)
+                    }}
+                    extraData={notifications}
+                    keyExtractor={(chat) => 'chat' + chat._id}
+                >
+                </FlatList>
+            </ScrollView>
+            <TouchableOpacity onPress={() => {
+                props.navigation.navigate('FormContact')
+            }} style={{
+                padding: 5,
+                backgroundColor: 'red',
+                borderRadius: 15,
+                width: 30,
+                height: 30,
+                position: 'absolute',
+                right: 10,
+                bottom: 50,
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                <Text style={{ color: 'white', fontSize: 18 }}>?</Text>
+            </TouchableOpacity>
+        </>
     );
 }
 
 GroupsScreen.navigationOptions = ({ navigation }) => ({
     headerRight: (
-        <TouchableOpacity onPress={() => {
-            setGlobal({ showContacts: true })
-            navigation.navigate('Contacts')
-        }}>
-            <AntDesign style={{
-                marginRight: 15,
-                transform: [{ rotate: '90deg' }]
-            }} name="select1" size={23} color={Colors.prinColor} />
-        </TouchableOpacity>
+        <>
+            <TouchableOpacity onPress={() => {
+                setGlobal({ showContacts: true })
+                navigation.navigate('Contacts')
+            }}>
+                <AntDesign style={{
+                    marginRight: 15,
+                    transform: [{ rotate: '90deg' }]
+                }} name="select1" size={23} color={Colors.prinColor} />
+            </TouchableOpacity>
+        </>
     ),
+
     title: navigation.getParam('title', 'Groups')
 });
 
