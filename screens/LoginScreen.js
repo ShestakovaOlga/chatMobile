@@ -20,11 +20,12 @@ export default function LoginScreen(props) {
   const [mail, setMail] = useState('')
   const [password, setPassword] = useState('')
   const [logged] = useGlobal('logged')
-  const [loginerror] = useGlobal('loginerror')
+  const [loginerror, setLoginerror] = useGlobal('loginerror')
 
   useEffect(() => {
     if (logged) {
       props.navigation.navigate('Groups')
+      setLoginerror('')
     }
   }, [logged])
 
@@ -106,6 +107,7 @@ export default function LoginScreen(props) {
         }} >No tienes cuenta?</Text>
         <TouchableOpacity onPress={() => {
           props.navigation.navigate('Signup')
+          setLoginerror('')
         }}>
           <Text style={{
             color: Colors.prinColor

@@ -18,7 +18,7 @@ export default function SignupScreen(props) {
     const [fullname, setFullname] = useGlobal('fullname')
     const [mail, setMail] = useGlobal('mail')
     const [password, setPassword] = useGlobal('password')
-    const [registererror] = useGlobal('registererror')
+    const [registererror, setRegistererror] = useGlobal('registererror')
 
     return (
         <View style={{
@@ -100,6 +100,7 @@ export default function SignupScreen(props) {
                     onPress={() => {
                         sendSignup(fullname, mail, password)
                         props.navigation.navigate('Login')
+                        setRegistererror('')
                         setFullname('')
                         setMail('')
                         setPassword('')
@@ -116,6 +117,7 @@ export default function SignupScreen(props) {
                     marginTop: 50,
                 }} >Tienes cuenta?</Text>
                 <TouchableOpacity onPress={() => {
+                    setRegistererror('')
                     props.navigation.navigate('Login')
                 }}>
                     <Text style={{

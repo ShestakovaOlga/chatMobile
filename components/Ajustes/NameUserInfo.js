@@ -20,8 +20,6 @@ export default function NameUserInfo(props) {
 
     useEffect(() => {
         Users()
-        console.warn('users', users);
-
     }, [])
     const user = users.find((u) => {
         return u.id === selectedUserInfo
@@ -30,6 +28,7 @@ export default function NameUserInfo(props) {
         flexDirection: 'row',
         marginLeft: 3,
         alignItems: 'center',
+        marginTop: 20
 
     }
     return (
@@ -42,6 +41,7 @@ export default function NameUserInfo(props) {
                     width: 60,
                     height: 60,
                     marginHorizontal: 5,
+                    marginTop: 5,
                     borderRadius: 30,
                 }} source={getAvatar(user.id)} />
                 <Text style={{
@@ -60,11 +60,7 @@ export default function NameUserInfo(props) {
                 }}>{user.email}</Text>
             </View>
 
-            <View style={{
-                flexDirection: 'row',
-                marginLeft: 3,
-                alignItems: 'center'
-            }}>
+            <View style={viewTextStyle}>
                 <Ionicons name="ios-people" size={27} color={Colors.companyIcon} />
                 <Text style={{
                     fontSize: 15,
