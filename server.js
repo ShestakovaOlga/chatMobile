@@ -1,6 +1,8 @@
 import { setGlobal, getGlobal } from 'reactn'
 import * as WebBrowser from 'expo-web-browser'
 import { AsyncStorage, Clipboard, Alert } from 'react-native'
+import { Notifications } from 'expo';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 
 //mandar un mensaje nuevo
@@ -10,6 +12,15 @@ export function sendMessage(message, ID) {
         payload: {
             text: message,
             chatID: ID
+        }
+    }))
+}
+
+export function sendComment(message) {
+    socket.send(JSON.stringify({
+        command: 'comment',
+        payload: {
+            text: message,
         }
     }))
 }
@@ -74,18 +85,19 @@ export async function uploadChatAvatar(file, chatId) {
     })
 }
 
-export async function sendMessageFile(chatId, image, video, ext) {
+export async function sendMessageFile(chatId, image, ext) {
     const token = await AsyncStorage.getItem('token')
     const data = new FormData()
     if (image) {
-        data.append('file', image)
+        const img = await ImageManipulator.manipulateAsync(image.uri, [], { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG })
+        data.append('file', { uri: img.uri, name: image.filename, type: 'image/jpeg' })
         data.append('type', 'image')
     }
-    if (video) {
-        data.append('file', video)
-        data.append('type', 'video')
-    }
-    data.append('ext', ext)
+    // if (video) {
+    //     data.append('file', video)
+    //     data.append('type', 'video')
+    // }
+    data.append('ext', 'jpeg')
     data.append('token', token)
     data.append('chatid', chatId)
 
@@ -179,6 +191,18 @@ export async function getMe() {  //traer los datos del usuario
     }));
 }
 
+export function getTime(date) {
+    const today = new Date()
+    const isThisMonth = today.getFullYear() === date.getFullYear() && today.getMonth() === date.getMonth()
+    if (isThisMonth && today.getDate() === date.getDate()) {
+        return date.getHours() + ':' + date.getMinutes()
+    }
+    today.setDate(today.getDate() - 1)
+    if (isThisMonth && today.getDate() === date.getDate()) {
+        return 'Ayer ' + date.getHours() + ':' + date.getMinutes()
+    }
+    return date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()
+}
 
 const url = 'http://192.168.1.10:8081'
 const ws = 'ws://192.168.1.10:8081/ws'
@@ -313,7 +337,11 @@ function gotServerMessage(msg) {    //servidor manda los mensajes
             break;
         case 'message':
             const g = getGlobal()
-            const chat = g.chats.find(chat => chat.id === msg.payload.message.chatID)
+            const chat = g.chats.find(chat => chat.id === parseInt(msg.payload.message.chatID))
+            console.warn('chat', msg.payload.message);
+            if (msg.payload.message.image) {
+                msg.payload.message.image = url + msg.payload.message.image
+            }
             if (chat) {
                 setGlobal(g => ({
                     messages: [
@@ -322,12 +350,20 @@ function gotServerMessage(msg) {    //servidor manda los mensajes
                     ]
                 }))
             }
-            setGlobal({
-                chats: [...g.chats.filter(chat => chat.id !== msg.payload.message.chatID), chat],
-                // notifications: {
-                //     [chat.ID]: g.notifications[chat.ID] ? g.notifications[chat.ID] + 1 : 1
-                // }
-            })
+            if (g.activeChat !== chat.id) {
+                Notifications.presentLocalNotificationAsync({
+                    title: 'Nuevo mensaje de ' + msg.payload.message.user.name,
+                    body: msg.payload.message.text,
+                    data: {
+                        chatId: chat.id
+                    }
+                })
+                setGlobal({
+                    notifications: {
+                        ['chat' + chat.id]: g.notifications['chat' + chat.id] ? g.notifications['chat' + chat.id] + 1 : 1
+                    }
+                })
+            }
             break;
     }
 }

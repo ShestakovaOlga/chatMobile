@@ -25,7 +25,7 @@ import * as Permissions from 'expo-permissions';
 
 export default function MessageScreen(props) {
     const [chats, setChats] = useGlobal('chats')
-    const [notifications] = useGlobal('notifications')
+    const [notifications, setNotifications] = useGlobal('notifications')
     const [messages] = useGlobal('messages')
     const [users] = useGlobal('users')
     const [activeChat, setActiveChat] = useGlobal('activeChat')
@@ -48,6 +48,9 @@ export default function MessageScreen(props) {
                     id: c.id,
                 })
                 getMessages(c.id)
+                setNotifications({
+                    ['chat' + c.id]: null
+                })
                 const chatUsers = users ? users.filter(u => u.chats.includes(c.id)) : []
                 if (!c.isGroup) {
                     props.navigation.setParams({
@@ -59,8 +62,6 @@ export default function MessageScreen(props) {
                 }
             }
         }
-        console.warn(chat);
-
     }, [chat, chats])
 
     return (
@@ -74,7 +75,7 @@ export default function MessageScreen(props) {
                     return <TouchableOpacity
                         onPress={async () => {
                             const res = await ImagePicker.launchImageLibraryAsync({
-                                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                                mediaTypes: ImagePicker.MediaTypeOptions.Images,
                                 allowsEditing: true
                             })
 
@@ -89,35 +90,34 @@ export default function MessageScreen(props) {
                                     type = match ? `image/${match[1]}` : `image`;
                                     kind = 'image'
                                 }
-                                if (['mp4', 'webm', 'mov'].includes(match[1])) {
-                                    type = match ? `video/${match[1]}` : `video`;
-                                    kind = 'video'
-                                }
+                                // if (['mp4', 'webm', 'mov'].includes(match[1])) {
+                                //     type = match ? `video/${match[1]}` : `video`;
+                                //     kind = 'video'
+                                // }
                                 if (!type) {
                                     Alert.alert('Error', 'Tipo de archivo no soportado ' + match[1])
                                     return
                                 }
                                 const file = { uri: localUri, name: filename, type }
-                                sendMessageFile(chat.id, kind == 'image' && file, kind == 'video' && file, match[1])
+                                sendMessageFile(chat.id, file, match[1])
                             }
                         }}
                         style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            height: '100%',
+                            height: 30,
+                            marginBottom: 7,
                             marginLeft: 5
                         }}>
                         <Ionicons name="ios-add-circle-outline" size={30} color={Colors.prinColor} />
                     </TouchableOpacity>
                 }}
-                renderMessageVideo={m => {
-                    console.warn('VIDEO', m);
-
-                    return <Video source={{ uri: m.currentMessage.video }} shouldPlay style={{
-                        width: 100,
-                        height: 80
-                    }}></Video>
-                }}
+                // renderMessageVideo={m => {
+                //     return <Video source={{ uri: m.currentMessage.video }} shouldPlay style={{
+                //         width: 100,
+                //         height: 80
+                //     }}></Video>
+                // }}
                 inverted={false}
                 messages={messages}
                 onSend={messages => {
