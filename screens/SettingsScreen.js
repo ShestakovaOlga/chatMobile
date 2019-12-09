@@ -13,6 +13,7 @@ import { Logout, getMe, modifyUser, getAvatar } from '../server';
 import AvatarSelect from '../components/AvatarSelect'
 import { TextInput } from 'react-native-gesture-handler';
 import { MaterialIcons, AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
+import DateTimePicker from "react-native-modal-datetime-picker";
 
 export default function SettingsScreen(props) {
     const [me] = useGlobal('me')
@@ -24,6 +25,8 @@ export default function SettingsScreen(props) {
     const [password, setPassword] = useState('')
     const [repeatpassword, setRepeatpassword] = useState('')
     const [showEdit, setShowEdit] = useState(false)
+    const [date, setDate] = useState(null)
+    const [showDatePicker, setShowDatePicker] = useState(false)
 
     useEffect(() => {
         getMe()
@@ -154,7 +157,40 @@ export default function SettingsScreen(props) {
                 <TextInput onChangeText={setRepeatpassword} style={inputStyle} value={repeatpassword} placeholder='Repetir contraseña'></TextInput>
             </>}
 
+            {/* <TouchableOpacity onPress={() => {
+                setShowDatePicker(true)
+            }}>
+                <Text>
+                    Date
+               </Text>
+            </TouchableOpacity>
+            <DateTimePicker
+                mode='datetime'
+                isVisible={showDatePicker}
+                onConfirm={(date) => {
+                    setDate(date)
+                    setShowDatePicker(false)
+                }}
+                onCancel={() => {
+                    setShowDatePicker(false)
+                }}
+                locale="es_SP"
+            /> */}
 
+
+            <TouchableOpacity onPress={() => {
+                props.navigation.navigate('FormContact')
+            }} style={{
+                paddingHorizontal: 15,
+                paddingVertical: 5,
+                borderWidth: 1,
+                borderColor: 'red',
+                borderRadius: 10,
+                marginTop: 40,
+                marginBottom: 20
+            }}>
+                <Text style={{ color: 'red', fontSize: 17 }}>Deja aquí tu comentario</Text>
+            </TouchableOpacity>
 
             <View style={{ alignItems: 'center' }}>
                 <TouchableOpacity style={{
