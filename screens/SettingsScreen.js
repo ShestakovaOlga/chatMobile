@@ -25,6 +25,7 @@ export default function SettingsScreen(props) {
     const [password, setPassword] = useState('')
     const [repeatpassword, setRepeatpassword] = useState('')
     const [showEdit, setShowEdit] = useState(false)
+    const [showHours, setShowHours] = useState(false)
     const [date, setDate] = useState(null)
     const [showDatePicker, setShowDatePicker] = useState(false)
 
@@ -157,25 +158,102 @@ export default function SettingsScreen(props) {
                 <TextInput onChangeText={setRepeatpassword} style={inputStyle} value={repeatpassword} placeholder='Repetir contraseña'></TextInput>
             </>}
 
+
             {/* <TouchableOpacity onPress={() => {
-                setShowDatePicker(true)
-            }}>
-                <Text>
-                    Date
-               </Text>
+                setShowHours(!showHours)
+            }}
+                style={{
+                    flexDirection: 'row',
+                    marginTop: 15
+                }}>
+                <Text style={{ flexGrow: 1, marginLeft: 10, fontSize: 17, color: Colors.prinColor }}>Editar horario</Text>
+                {!showHours && <MaterialIcons name="keyboard-arrow-down" size={32} color={Colors.prinColor} />}
+                {showHours && <MaterialIcons name="keyboard-arrow-up" size={32} color={Colors.prinColor} />}
             </TouchableOpacity>
-            <DateTimePicker
-                mode='datetime'
-                isVisible={showDatePicker}
-                onConfirm={(date) => {
-                    setDate(date)
-                    setShowDatePicker(false)
-                }}
-                onCancel={() => {
-                    setShowDatePicker(false)
-                }}
-                locale="es_SP"
-            /> */}
+
+            {showHours && <>
+                <TouchableOpacity onPress={() => {
+                    setShowDatePicker(true)
+                }}>
+                    <Text>
+                        La fecha de inicio
+               </Text>
+                </TouchableOpacity>
+
+                <DateTimePicker
+                    mode='date'
+                    isVisible={showDatePicker}
+                    onConfirm={(date) => {
+                        setDate(date)
+                        setShowDatePicker(false)
+                    }}
+                    onCancel={() => {
+                        setShowDatePicker(false)
+                    }}
+                    locale="es_SP"
+                /> */}
+
+            {/* <TouchableOpacity onPress={() => {
+                    setShowDatePicker(true)
+                }}>
+                    <Text>
+                        La fecha de fin
+                    </Text>
+                </TouchableOpacity>
+
+                <DateTimePicker
+                    mode='date'
+                    isVisible={showDatePicker}
+                    onConfirm={(date) => {
+                        setDate(date)
+                        setShowDatePicker(false)
+                    }}
+                    onCancel={() => {
+                        setShowDatePicker(false)
+                    }}
+                    locale="es_SP"
+                /> */}
+
+            {/* <TouchableOpacity onPress={() => {
+                    setShowDatePicker(true)
+                }}>
+                    <Text>
+                        Desde
+                    </Text>
+                </TouchableOpacity>
+                <DateTimePicker
+                    mode='time'
+                    isVisible={showDatePicker}
+                    onConfirm={(date) => {
+                        setDate(date)
+                        setShowDatePicker(false)
+                    }}
+                    onCancel={() => {
+                        setShowDatePicker(false)
+                    }}
+                    locale="es_SP"
+                /> */}
+
+            {/* <TouchableOpacity onPress={() => {
+                    setShowDatePicker(true)
+                }}>
+                    <Text>
+                        Hasta
+                    </Text>
+                </TouchableOpacity>
+                <DateTimePicker
+                    mode='time'
+                    isVisible={showDatePicker}
+                    onConfirm={(date) => {
+                        setDate(date)
+                        setShowDatePicker(false)
+                    }}
+                    onCancel={() => {
+                        setShowDatePicker(false)
+                    }}
+                    locale="es_SP"
+                />  </>} */}
+
 
 
             <TouchableOpacity onPress={() => {

@@ -206,8 +206,8 @@ export function getTime(date) {
 
 const url = 'http://pc.galax.be:8081'
 const ws = 'ws://pc.galax.be:8081/ws'
-//const ws = 'ws://c7252baf.ngrok.io/ws'
-//const ws = 'wss://chat.galax.be/ws'
+//const url = 'http://192.168.1.10:8081'
+//const ws = 'ws://192.168.1.10:8081/ws'
 
 
 // Crea una nueva conexión.

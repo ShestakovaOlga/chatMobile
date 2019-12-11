@@ -29,7 +29,7 @@ export default function SelectContactScreen(props) {
 
     const disabled = selected.length === 0 || (selected.length > 1 && chatname === '')
 
-    return <View>
+    return <ScrollView>
         {selected.length >= 1 && <View
             style={{
                 justifyContent: 'center',
@@ -72,7 +72,7 @@ export default function SelectContactScreen(props) {
                 setSelected(selected.filter(email => email !== user.email))
             }
         }} checked={selected.includes(user.email)} {...user} />)}
-    </View>
+    </ScrollView>
 }
 SelectContactScreen.navigationOptions = ({ navigation }) => ({
     headerLeft: (
