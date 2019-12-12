@@ -160,6 +160,12 @@ export async function Logout() {  //cerrar la sesion
     connect()
 }
 
+export async function removeProfile() {   //eliminar cuenta
+    socket.send(JSON.stringify({
+        command: 'removeProfile',
+    }));
+}
+
 export async function CreateGroup(name, members) { //crear un grupo
     socket.send(JSON.stringify({
         command: 'newchat',
@@ -204,10 +210,10 @@ export function getTime(date) {
     return date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()
 }
 
-const url = 'http://pc.galax.be:8081'
-const ws = 'ws://pc.galax.be:8081/ws'
-//const url = 'http://192.168.1.10:8081'
-//const ws = 'ws://192.168.1.10:8081/ws'
+//const url = 'http://pc.galax.be:8081'
+//const ws = 'ws://pc.galax.be:8081/ws'
+const url = 'http://192.168.1.10:8081'
+const ws = 'ws://192.168.1.10:8081/ws'
 
 
 // Crea una nueva conexión.
@@ -304,6 +310,11 @@ function gotServerMessage(msg) {    //servidor manda los mensajes
         case 'chats':
             setGlobal({
                 chats: msg.payload.chats
+            })
+            break;
+        case 'deleteok':
+            setGlobal({
+                logged: false
             })
             break;
         case 'logout':
