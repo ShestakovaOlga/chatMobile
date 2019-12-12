@@ -6,14 +6,16 @@ import {
     Text,
     TouchableOpacity,
     View,
-    InputEvent
+    InputEvent,
+    Alert
 } from 'react-native';
 import Colors from '../constants/Colors';
-import { Logout, getMe, modifyUser, getAvatar } from '../server';
+import { Logout, getMe, modifyUser, getAvatar, removeProfile } from '../server';
 import AvatarSelect from '../components/AvatarSelect'
 import { TextInput } from 'react-native-gesture-handler';
 import { MaterialIcons, AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
 import DateTimePicker from "react-native-modal-datetime-picker";
+
 
 export default function SettingsScreen(props) {
     const [me] = useGlobal('me')
@@ -25,9 +27,15 @@ export default function SettingsScreen(props) {
     const [password, setPassword] = useState('')
     const [repeatpassword, setRepeatpassword] = useState('')
     const [showEdit, setShowEdit] = useState(false)
-    const [showHours, setShowHours] = useState(false)
-    const [date, setDate] = useState(null)
-    const [showDatePicker, setShowDatePicker] = useState(false)
+    const [logged] = useGlobal('logged')
+    const [deleteError, setDeleteError] = useGlobal('deleteError')
+
+    useEffect(() => {
+        if (!logged) {
+            props.navigation.navigate('Login')
+        }
+    }, [logged])
+
 
     useEffect(() => {
         getMe()
@@ -158,104 +166,6 @@ export default function SettingsScreen(props) {
                 <TextInput onChangeText={setRepeatpassword} style={inputStyle} value={repeatpassword} placeholder='Repetir contraseña'></TextInput>
             </>}
 
-
-            {/* <TouchableOpacity onPress={() => {
-                setShowHours(!showHours)
-            }}
-                style={{
-                    flexDirection: 'row',
-                    marginTop: 15
-                }}>
-                <Text style={{ flexGrow: 1, marginLeft: 10, fontSize: 17, color: Colors.prinColor }}>Editar horario</Text>
-                {!showHours && <MaterialIcons name="keyboard-arrow-down" size={32} color={Colors.prinColor} />}
-                {showHours && <MaterialIcons name="keyboard-arrow-up" size={32} color={Colors.prinColor} />}
-            </TouchableOpacity>
-
-            {showHours && <>
-                <TouchableOpacity onPress={() => {
-                    setShowDatePicker(true)
-                }}>
-                    <Text>
-                        La fecha de inicio
-               </Text>
-                </TouchableOpacity>
-
-                <DateTimePicker
-                    mode='date'
-                    isVisible={showDatePicker}
-                    onConfirm={(date) => {
-                        setDate(date)
-                        setShowDatePicker(false)
-                    }}
-                    onCancel={() => {
-                        setShowDatePicker(false)
-                    }}
-                    locale="es_SP"
-                /> */}
-
-            {/* <TouchableOpacity onPress={() => {
-                    setShowDatePicker(true)
-                }}>
-                    <Text>
-                        La fecha de fin
-                    </Text>
-                </TouchableOpacity>
-
-                <DateTimePicker
-                    mode='date'
-                    isVisible={showDatePicker}
-                    onConfirm={(date) => {
-                        setDate(date)
-                        setShowDatePicker(false)
-                    }}
-                    onCancel={() => {
-                        setShowDatePicker(false)
-                    }}
-                    locale="es_SP"
-                /> */}
-
-            {/* <TouchableOpacity onPress={() => {
-                    setShowDatePicker(true)
-                }}>
-                    <Text>
-                        Desde
-                    </Text>
-                </TouchableOpacity>
-                <DateTimePicker
-                    mode='time'
-                    isVisible={showDatePicker}
-                    onConfirm={(date) => {
-                        setDate(date)
-                        setShowDatePicker(false)
-                    }}
-                    onCancel={() => {
-                        setShowDatePicker(false)
-                    }}
-                    locale="es_SP"
-                /> */}
-
-            {/* <TouchableOpacity onPress={() => {
-                    setShowDatePicker(true)
-                }}>
-                    <Text>
-                        Hasta
-                    </Text>
-                </TouchableOpacity>
-                <DateTimePicker
-                    mode='time'
-                    isVisible={showDatePicker}
-                    onConfirm={(date) => {
-                        setDate(date)
-                        setShowDatePicker(false)
-                    }}
-                    onCancel={() => {
-                        setShowDatePicker(false)
-                    }}
-                    locale="es_SP"
-                />  </>} */}
-
-
-
             <TouchableOpacity onPress={() => {
                 props.navigation.navigate('FormContact')
             }} style={{
@@ -270,22 +180,46 @@ export default function SettingsScreen(props) {
                 <Text style={{ color: 'red', fontSize: 17 }}>Deja aquí tu comentario</Text>
             </TouchableOpacity>
 
-            <View style={{ alignItems: 'center' }}>
-                <TouchableOpacity style={{
-                    paddingHorizontal: 15,
-                    paddingVertical: 5,
-                    borderWidth: 1,
-                    borderColor: 'red',
-                    borderRadius: 10,
-                    marginTop: 40,
-                    marginBottom: 20
-                }} onPress={async () => {
-                    await Logout()
-                    props.navigation.navigate('Login')
-                }}>
-                    <Text style={{ color: 'red', fontSize: 17 }}>Cerrar la sesión</Text>
-                </TouchableOpacity>
-            </View>
+
+            <TouchableOpacity style={{
+                paddingHorizontal: 15,
+                paddingVertical: 5,
+                marginTop: 40,
+            }} onPress={async () => {
+                Alert.alert(
+                    'Eliminar tu cuenta',
+                    '¿Estás seguro de querer eliminar tu cuenta? Esta acción es irreversible',
+                    [
+                        {
+                            text: 'Eliminar', onPress: async () => {
+                                await removeProfile()
+                            }
+                        },
+                        {
+                            text: 'Me lo pensaré',
+                            onPress: () => console.log('Cancel Pressed'),
+                            style: 'cancel',
+                        },
+                    ],
+                    { cancelable: false }
+                );
+
+            }}>
+                <Text style={{ color: 'red', fontSize: 17 }}>Eliminar la cuenta</Text>
+            </TouchableOpacity>
+            {/* {deleteError !== '' && <Text style={{ color: 'red', marginBottom: 10, fontSize: 17 }}>{deleteError}</Text>} */}
+
+            <TouchableOpacity style={{
+                paddingHorizontal: 15,
+                paddingVertical: 5,
+                marginTop: 10,
+                marginBottom: 20
+            }} onPress={async () => {
+                await Logout()
+                props.navigation.navigate('Login')
+            }}>
+                <Text style={{ color: 'red', fontSize: 17 }}>Cerrar la sesión</Text>
+            </TouchableOpacity>
         </ScrollView>
     );
 }

@@ -27,6 +27,7 @@ export default function GroupsScreen(props) {
     const [me] = useGlobal('me')
 
 
+
     useEffect(() => {
         getMe()
         Users()
