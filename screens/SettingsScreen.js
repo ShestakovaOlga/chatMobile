@@ -102,18 +102,18 @@ export default function SettingsScreen(props) {
 
     const eyeStyle1 = {
         position: 'absolute',
-        right: 5,
+        right: 11,
         height: 35,
-        width: 40,
+        width: 30,
         padding: 2,
         alignItems: 'center',
         zIndex: 10,
     }
     const eyeStyle2 = {
         position: 'absolute',
-        right: 5,
+        right: 11,
         height: 35,
-        width: 40,
+        width: 30,
         padding: 2,
         alignItems: 'center',
         zIndex: 10,
@@ -185,31 +185,42 @@ export default function SettingsScreen(props) {
                 </View>
                 <View style={{
                     flexDirection: 'row',
-                    width: '100%',
-                    justifyContent: 'center',
                     alignItems: 'center'
                 }}>
                     <TouchableOpacity style={eyeStyle1} onPress={() => {
                         setShowPassword(!showPassword)
                     }}>
-                        {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> : <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
+                        {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> :
+                            <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
                     </TouchableOpacity>
 
-                    <TextInput onChangeText={setPassword} secureTextEntry={!showPassword} style={inputStyle} value={password} placeholder='Nueva contraseña'></TextInput>
+                    <TextInput
+                        onChangeText={setPassword}
+                        secureTextEntry={!showPassword}
+                        style={{ ...inputStyle, width: '100%', marginBottom: 10 }}
+                        value={password}
+                        placeholder='Nueva contraseña'>
+                    </TextInput>
                 </View>
 
                 <View style={{
                     flexDirection: 'row',
-                    width: '100%',
-                    justifyContent: 'center',
                     alignItems: 'center'
                 }}>
                     <TouchableOpacity style={eyeStyle2} onPress={() => {
                         setShowPassword(!showPassword)
                     }}>
-                        {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> : <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
+                        {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> :
+                            <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
                     </TouchableOpacity>
-                    <TextInput onChangeText={setRepeatpassword} secureTextEntry={!showPassword} style={inputStyle} value={repeatpassword} placeholder='Repetir contraseña'></TextInput>
+                    <TextInput
+                        onChangeText={setRepeatpassword}
+                        secureTextEntry={!showPassword}
+                        style={{ ...inputStyle, width: '100%' }}
+                        value={repeatpassword}
+                        placeholder='Repetir contraseña'>
+
+                    </TextInput>
                 </View>
             </>
             }
@@ -240,24 +251,26 @@ export default function SettingsScreen(props) {
                 );
 
             }}>
-                <AntDesign name="deleteuser" size={19} color={Colors.prinColor} />
-                <Text style={{ color: 'red', fontSize: 17, marginRight: 15 }}>Eliminar la cuenta</Text>
+                <AntDesign name="deleteuser" size={20} color={'red'} />
+                <Text style={{ color: 'red', fontSize: 17, marginLeft: 15 }}>Eliminar la cuenta</Text>
             </TouchableOpacity>
             {/* {deleteError !== '' && <Text style={{ color: 'red', marginBottom: 10, fontSize: 17 }}>{deleteError}</Text>} */}
 
             <TouchableOpacity style={{
                 paddingHorizontal: 5,
-                paddingVertical: 5,
+                paddingVertical: 20,
                 marginTop: 10,
                 marginBottom: 20,
                 flexDirection: 'row',
-                alignItems: 'center'
+                alignItems: 'center',
+                borderWidth: 1,
+                borderColor: Colors.prinColorLight,
             }} onPress={async () => {
                 await Logout()
                 props.navigation.navigate('Login')
             }}>
-                <AntDesign name="closecircle" size={19} color={Colors.prinColor} />
-                <Text style={{ color: 'red', fontSize: 17, }}>Cerrar la sesión</Text>
+                <AntDesign name="closecircle" size={19} color={'red'} />
+                <Text style={{ color: 'red', fontSize: 17, marginLeft: 15 }}>Cerrar la sesión</Text>
             </TouchableOpacity>
         </ScrollView>
     );
