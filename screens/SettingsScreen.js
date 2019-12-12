@@ -13,7 +13,7 @@ import Colors from '../constants/Colors';
 import { Logout, getMe, modifyUser, getAvatar, removeProfile } from '../server';
 import AvatarSelect from '../components/AvatarSelect'
 import { TextInput } from 'react-native-gesture-handler';
-import { MaterialIcons, AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
+import { MaterialIcons, AntDesign, Entypo, Ionicons, FontAwesome } from '@expo/vector-icons';
 import DateTimePicker from "react-native-modal-datetime-picker";
 
 
@@ -25,10 +25,11 @@ export default function SettingsScreen(props) {
     const [company, setCompany] = useState('')
     const [role, setRole] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
     const [repeatpassword, setRepeatpassword] = useState('')
     const [showEdit, setShowEdit] = useState(false)
     const [logged] = useGlobal('logged')
-    const [deleteError, setDeleteError] = useGlobal('deleteError')
+
 
     useEffect(() => {
         if (!logged) {
@@ -98,6 +99,28 @@ export default function SettingsScreen(props) {
         color: Colors.prinColor,
         fontSize: 16,
     }
+
+    const eyeStyle1 = {
+        position: 'absolute',
+        bottom: 270,
+        right: 5,
+        height: 35,
+        width: 40,
+        padding: 2,
+        alignItems: 'center',
+        zIndex: 10,
+    }
+    const eyeStyle2 = {
+        position: 'absolute',
+        bottom: 210,
+        right: 5,
+        height: 35,
+        width: 40,
+        padding: 2,
+        alignItems: 'center',
+        zIndex: 10,
+    }
+
     return (
         <ScrollView style={{
             backgroundColor: 'white',
@@ -162,8 +185,20 @@ export default function SettingsScreen(props) {
                     <Ionicons name="md-key" size={27} color={Colors.passwordIcon} style={{ marginLeft: 2 }} />
                     <Text style={textLabelStyle}>Contraseña</Text>
                 </View>
-                <TextInput onChangeText={setPassword} style={inputStyle} value={password} placeholder='Nueva contraseña'></TextInput>
-                <TextInput onChangeText={setRepeatpassword} style={inputStyle} value={repeatpassword} placeholder='Repetir contraseña'></TextInput>
+
+                <TouchableOpacity style={eyeStyle1} onPress={() => {
+                    setShowPassword(!showPassword)
+                }}>
+                    {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> : <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
+                </TouchableOpacity>
+
+                <TextInput onChangeText={setPassword} secureTextEntry={!showPassword} style={inputStyle} value={password} placeholder='Nueva contraseña'></TextInput>
+                <TouchableOpacity style={eyeStyle2} onPress={() => {
+                    setShowPassword(!showPassword)
+                }}>
+                    {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> : <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
+                </TouchableOpacity>
+                <TextInput onChangeText={setRepeatpassword} secureTextEntry={!showPassword} style={inputStyle} value={repeatpassword} placeholder='Repetir contraseña'></TextInput>
             </>}
 
             <TouchableOpacity onPress={() => {

@@ -12,13 +12,26 @@ import { sendSignup } from '../server'
 import { MonoText } from '../components/StyledText';
 import { TextInput } from 'react-native-gesture-handler';
 import Colors from '../constants/Colors';
-import AvatarSelect from '../components/AvatarSelect'
+import AvatarSelect from '../components/AvatarSelect';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function SignupScreen(props) {
     const [fullname, setFullname] = useGlobal('fullname')
     const [mail, setMail] = useGlobal('mail')
     const [password, setPassword] = useGlobal('password')
     const [registererror, setRegistererror] = useGlobal('registererror')
+    const [showPassword, setShowPassword] = useState(false)
+
+    const eyeStyle = {
+        position: 'absolute',
+        top: 260,
+        right: 7,
+        height: 35,
+        width: 40,
+        padding: 2,
+        alignItems: 'center',
+        zIndex: 10,
+    }
 
     return (
         <View style={{
@@ -81,6 +94,12 @@ export default function SignupScreen(props) {
                     autoComplete='email'
                     value={mail}>
                 </TextInput>
+                <TouchableOpacity style={eyeStyle} onPress={() => {
+                    setShowPassword(!showPassword)
+                }}>
+                    {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> :
+                        <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
+                </TouchableOpacity>
                 <TextInput
                     onChangeText={(value) => {
                         setPassword(value)
@@ -92,7 +111,7 @@ export default function SignupScreen(props) {
                     }}
                     placeholder='Contraseña'
                     autoComplete='password'
-                    secureTextEntry
+                    secureTextEntry={!showPassword}
                     value={password}>
                 </TextInput>
                 {registererror !== '' && <Text style={{ color: 'red' }}>{registererror}</Text>}

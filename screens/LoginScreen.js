@@ -15,12 +15,14 @@ import { login } from '../server'
 import { MonoText } from '../components/StyledText';
 import { TextInput } from 'react-native-gesture-handler';
 import Colors from '../constants/Colors';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function LoginScreen(props) {
   const [mail, setMail] = useState('')
   const [password, setPassword] = useState('')
   const [logged] = useGlobal('logged')
   const [loginerror, setLoginerror] = useGlobal('loginerror')
+  const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
     if (logged) {
@@ -28,6 +30,17 @@ export default function LoginScreen(props) {
       setLoginerror('')
     }
   }, [logged])
+
+  const eyeStyle = {
+    position: 'absolute',
+    top: 180,
+    right: 7,
+    height: 35,
+    width: 40,
+    padding: 2,
+    alignItems: 'center',
+    zIndex: 10,
+  }
 
   return (
     <View style={{
@@ -75,6 +88,12 @@ export default function LoginScreen(props) {
           placeholder='Email'
           value={mail}>
         </TextInput>
+        <TouchableOpacity style={eyeStyle} onPress={() => {
+          setShowPassword(!showPassword)
+        }}>
+          {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> :
+            <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
+        </TouchableOpacity>
         <TextInput
           onChangeText={(value) => {
             setPassword(value)
@@ -87,8 +106,8 @@ export default function LoginScreen(props) {
           }}
           placeholder='Contraseña'
           autoComplete='password'
-          secureTextEntry
-          value={password}>
+          value={password}
+          secureTextEntry={!showPassword}>
         </TextInput>
         {loginerror !== '' && <Text style={{ color: 'red', marginBottom: 10, fontSize: 17 }}>{loginerror}</Text>}
         <TouchableOpacity
