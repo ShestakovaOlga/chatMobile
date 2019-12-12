@@ -16,6 +16,7 @@ import { MonoText } from '../components/StyledText';
 import { TextInput } from 'react-native-gesture-handler';
 import Colors from '../constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
+import { Updates } from 'expo'
 
 export default function LoginScreen(props) {
   const [mail, setMail] = useState('')
@@ -23,7 +24,19 @@ export default function LoginScreen(props) {
   const [logged] = useGlobal('logged')
   const [loginerror, setLoginerror] = useGlobal('loginerror')
   const [showPassword, setShowPassword] = useState(false)
-
+  useEffect(() => {
+    try {
+      const update = await Updates.checkForUpdateAsync()
+      if (update.isAvailable) {
+        await Updates.fetchUpdateAsync()
+        setTimeout(() => {
+          Updates.reloadFromCache()
+        }, 1500)
+      }
+    } catch (e) {
+      // handle or log error
+    }
+  }, [])
   useEffect(() => {
     if (logged) {
       props.navigation.navigate('Groups')
