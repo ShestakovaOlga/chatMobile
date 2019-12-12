@@ -24,7 +24,7 @@ export default function LoginScreen(props) {
   const [logged] = useGlobal('logged')
   const [loginerror, setLoginerror] = useGlobal('loginerror')
   const [showPassword, setShowPassword] = useState(false)
-  useEffect(() => {
+  useEffect(async () => {
     try {
       const update = await Updates.checkForUpdateAsync()
       if (update.isAvailable) {
