@@ -24,9 +24,8 @@ export default function SignupScreen(props) {
 
     const eyeStyle = {
         position: 'absolute',
-        top: 260,
         right: 7,
-        height: 35,
+        height: 25,
         width: 40,
         padding: 2,
         alignItems: 'center',
@@ -94,26 +93,33 @@ export default function SignupScreen(props) {
                     autoComplete='email'
                     value={mail}>
                 </TextInput>
-                <TouchableOpacity style={eyeStyle} onPress={() => {
-                    setShowPassword(!showPassword)
+                <View style={{
+                    flexDirection: 'row',
+                    width: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center'
                 }}>
-                    {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> :
-                        <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
-                </TouchableOpacity>
-                <TextInput
-                    onChangeText={(value) => {
-                        setPassword(value)
-                    }} style={{
-                        width: '100%',
-                        height: 40,
-                        borderColor: 'gray',
-                        borderBottomWidth: 1,
-                    }}
-                    placeholder='Contraseña'
-                    autoComplete='password'
-                    secureTextEntry={!showPassword}
-                    value={password}>
-                </TextInput>
+                    <TouchableOpacity style={eyeStyle} onPress={() => {
+                        setShowPassword(!showPassword)
+                    }}>
+                        {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> :
+                            <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
+                    </TouchableOpacity>
+                    <TextInput
+                        onChangeText={(value) => {
+                            setPassword(value)
+                        }} style={{
+                            width: '100%',
+                            height: 40,
+                            borderColor: 'gray',
+                            borderBottomWidth: 1,
+                        }}
+                        placeholder='Contraseña'
+                        autoComplete='password'
+                        secureTextEntry={!showPassword}
+                        value={password}>
+                    </TextInput>
+                </View>
                 {registererror !== '' && <Text style={{ color: 'red' }}>{registererror}</Text>}
                 <TouchableOpacity
                     onPress={() => {

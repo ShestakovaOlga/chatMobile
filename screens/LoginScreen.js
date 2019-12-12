@@ -33,9 +33,8 @@ export default function LoginScreen(props) {
 
   const eyeStyle = {
     position: 'absolute',
-    top: 180,
     right: 7,
-    height: 35,
+    height: 25,
     width: 40,
     padding: 2,
     alignItems: 'center',
@@ -88,27 +87,34 @@ export default function LoginScreen(props) {
           placeholder='Email'
           value={mail}>
         </TextInput>
-        <TouchableOpacity style={eyeStyle} onPress={() => {
-          setShowPassword(!showPassword)
+        <View style={{
+          flexDirection: 'row',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center'
         }}>
-          {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> :
-            <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
-        </TouchableOpacity>
-        <TextInput
-          onChangeText={(value) => {
-            setPassword(value)
-          }} style={{
-            width: '100%',
-            height: 40,
-            borderColor: 'gray',
-            borderBottomWidth: 1,
-            margin: 15
-          }}
-          placeholder='Contraseña'
-          autoComplete='password'
-          value={password}
-          secureTextEntry={!showPassword}>
-        </TextInput>
+          <TouchableOpacity style={eyeStyle} onPress={() => {
+            setShowPassword(!showPassword)
+          }}>
+            {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> :
+              <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
+          </TouchableOpacity>
+          <TextInput
+            onChangeText={(value) => {
+              setPassword(value)
+            }} style={{
+              width: '100%',
+              height: 40,
+              borderColor: 'gray',
+              borderBottomWidth: 1,
+              margin: 15
+            }}
+            placeholder='Contraseña'
+            autoComplete='password'
+            value={password}
+            secureTextEntry={!showPassword}>
+          </TextInput>
+        </View>
         {loginerror !== '' && <Text style={{ color: 'red', marginBottom: 10, fontSize: 17 }}>{loginerror}</Text>}
         <TouchableOpacity
           onPress={() => {

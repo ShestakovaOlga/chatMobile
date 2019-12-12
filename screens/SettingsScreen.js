@@ -14,7 +14,7 @@ import { Logout, getMe, modifyUser, getAvatar, removeProfile } from '../server';
 import AvatarSelect from '../components/AvatarSelect'
 import { TextInput } from 'react-native-gesture-handler';
 import { MaterialIcons, AntDesign, Entypo, Ionicons, FontAwesome } from '@expo/vector-icons';
-import DateTimePicker from "react-native-modal-datetime-picker";
+
 
 
 export default function SettingsScreen(props) {
@@ -102,7 +102,6 @@ export default function SettingsScreen(props) {
 
     const eyeStyle1 = {
         position: 'absolute',
-        bottom: 270,
         right: 5,
         height: 35,
         width: 40,
@@ -112,7 +111,6 @@ export default function SettingsScreen(props) {
     }
     const eyeStyle2 = {
         position: 'absolute',
-        bottom: 210,
         right: 5,
         height: 35,
         width: 40,
@@ -185,41 +183,43 @@ export default function SettingsScreen(props) {
                     <Ionicons name="md-key" size={27} color={Colors.passwordIcon} style={{ marginLeft: 2 }} />
                     <Text style={textLabelStyle}>Contraseña</Text>
                 </View>
-
-                <TouchableOpacity style={eyeStyle1} onPress={() => {
-                    setShowPassword(!showPassword)
+                <View style={{
+                    flexDirection: 'row',
+                    width: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center'
                 }}>
-                    {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> : <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
-                </TouchableOpacity>
+                    <TouchableOpacity style={eyeStyle1} onPress={() => {
+                        setShowPassword(!showPassword)
+                    }}>
+                        {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> : <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
+                    </TouchableOpacity>
 
-                <TextInput onChangeText={setPassword} secureTextEntry={!showPassword} style={inputStyle} value={password} placeholder='Nueva contraseña'></TextInput>
-                <TouchableOpacity style={eyeStyle2} onPress={() => {
-                    setShowPassword(!showPassword)
+                    <TextInput onChangeText={setPassword} secureTextEntry={!showPassword} style={inputStyle} value={password} placeholder='Nueva contraseña'></TextInput>
+                </View>
+
+                <View style={{
+                    flexDirection: 'row',
+                    width: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center'
                 }}>
-                    {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> : <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
-                </TouchableOpacity>
-                <TextInput onChangeText={setRepeatpassword} secureTextEntry={!showPassword} style={inputStyle} value={repeatpassword} placeholder='Repetir contraseña'></TextInput>
-            </>}
-
-            <TouchableOpacity onPress={() => {
-                props.navigation.navigate('FormContact')
-            }} style={{
-                paddingHorizontal: 15,
-                paddingVertical: 5,
-                borderWidth: 1,
-                borderColor: 'red',
-                borderRadius: 10,
-                marginTop: 40,
-                marginBottom: 20
-            }}>
-                <Text style={{ color: 'red', fontSize: 17 }}>Deja aquí tu comentario</Text>
-            </TouchableOpacity>
-
+                    <TouchableOpacity style={eyeStyle2} onPress={() => {
+                        setShowPassword(!showPassword)
+                    }}>
+                        {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> : <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
+                    </TouchableOpacity>
+                    <TextInput onChangeText={setRepeatpassword} secureTextEntry={!showPassword} style={inputStyle} value={repeatpassword} placeholder='Repetir contraseña'></TextInput>
+                </View>
+            </>
+            }
 
             <TouchableOpacity style={{
-                paddingHorizontal: 15,
+                paddingHorizontal: 5,
                 paddingVertical: 5,
                 marginTop: 40,
+                flexDirection: 'row',
+                alignItems: 'center'
             }} onPress={async () => {
                 Alert.alert(
                     'Eliminar tu cuenta',
@@ -240,20 +240,24 @@ export default function SettingsScreen(props) {
                 );
 
             }}>
-                <Text style={{ color: 'red', fontSize: 17 }}>Eliminar la cuenta</Text>
+                <AntDesign name="deleteuser" size={19} color={Colors.prinColor} />
+                <Text style={{ color: 'red', fontSize: 17, marginRight: 15 }}>Eliminar la cuenta</Text>
             </TouchableOpacity>
             {/* {deleteError !== '' && <Text style={{ color: 'red', marginBottom: 10, fontSize: 17 }}>{deleteError}</Text>} */}
 
             <TouchableOpacity style={{
-                paddingHorizontal: 15,
+                paddingHorizontal: 5,
                 paddingVertical: 5,
                 marginTop: 10,
-                marginBottom: 20
+                marginBottom: 20,
+                flexDirection: 'row',
+                alignItems: 'center'
             }} onPress={async () => {
                 await Logout()
                 props.navigation.navigate('Login')
             }}>
-                <Text style={{ color: 'red', fontSize: 17 }}>Cerrar la sesión</Text>
+                <AntDesign name="closecircle" size={19} color={Colors.prinColor} />
+                <Text style={{ color: 'red', fontSize: 17, }}>Cerrar la sesión</Text>
             </TouchableOpacity>
         </ScrollView>
     );
