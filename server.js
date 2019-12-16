@@ -16,6 +16,7 @@ export function sendMessage(message, ID) {
     }))
 }
 
+//mandar el comentario 
 export function sendComment(message) {
     socket.send(JSON.stringify({
         command: 'comment',
@@ -25,6 +26,7 @@ export function sendComment(message) {
     }))
 }
 
+//modificar la info del usuario
 export function modifyUser(id, name, email, password, company, role, img) {
     socket.send(JSON.stringify({
         command: 'modifyuser',
@@ -42,6 +44,7 @@ export function modifyUser(id, name, email, password, company, role, img) {
     }
 }
 
+//recebir mensajes
 export function getMessages(chatID) {
     socket.send(JSON.stringify({
         command: 'messages',
@@ -51,6 +54,7 @@ export function getMessages(chatID) {
     }))
 }
 
+//notif push
 export function pushToken(token) {
     socket.send(JSON.stringify({
         command: 'pushtoken',
@@ -60,6 +64,7 @@ export function pushToken(token) {
     }))
 }
 
+//cambiar el avatar del usuario
 export async function uploadAvatar(file) {
     const token = await AsyncStorage.getItem('token')
     const data = new FormData()
@@ -72,6 +77,7 @@ export async function uploadAvatar(file) {
     })
 }
 
+//cambiar el avatar en el chat
 export async function uploadChatAvatar(file, chatId) {
     const token = await AsyncStorage.getItem('token')
     const data = new FormData()
@@ -85,6 +91,7 @@ export async function uploadChatAvatar(file, chatId) {
     })
 }
 
+//enviar los img,videos 
 export async function sendMessageFile(chatId, image, ext) {
     const token = await AsyncStorage.getItem('token')
     const data = new FormData()
@@ -107,6 +114,7 @@ export async function sendMessageFile(chatId, image, ext) {
     })
 }
 
+//añadir los avatars para los grupos y los chats
 export function getAvatar(userId) {
     return { uri: `${url}/${userId}.png` }
 }
@@ -151,8 +159,8 @@ export async function sendSignup(name, email, password) {
     }));
 }
 
-
-export async function Logout() {  //cerrar la sesion
+//cerrar la sesion
+export async function Logout() {
     await AsyncStorage.removeItem('token')
     setGlobal({ logged: false })
     socket.close()
@@ -160,13 +168,15 @@ export async function Logout() {  //cerrar la sesion
     connect()
 }
 
-export async function removeProfile() {   //eliminar cuenta
+//eliminar cuenta
+export async function removeProfile() {
     socket.send(JSON.stringify({
         command: 'removeProfile',
     }));
 }
 
-export async function CreateGroup(name, members) { //crear un grupo
+//crear un grupo
+export async function CreateGroup(name, members) {
     socket.send(JSON.stringify({
         command: 'newchat',
         payload: {
@@ -176,12 +186,13 @@ export async function CreateGroup(name, members) { //crear un grupo
     }));
 }
 
-export async function getChats() {  //traerse los chats
+//traerse los chats
+export async function getChats() {
     socket.send(JSON.stringify({
         command: 'chats',
     }));
 }
-
+//quitar los notif
 export async function chatRead(ID) {
     socket.send(JSON.stringify({
         command: 'chatread',
@@ -191,12 +202,14 @@ export async function chatRead(ID) {
     }));
 }
 
-export async function getMe() {  //traer los datos del usuario
+//traer los datos del usuario
+export async function getMe() {
     socket.send(JSON.stringify({
         command: 'me',
     }));
 }
 
+//poner la fecha
 export function getTime(date) {
     const today = new Date()
     const isThisMonth = today.getFullYear() === date.getFullYear() && today.getMonth() === date.getMonth()
@@ -207,7 +220,7 @@ export function getTime(date) {
     if (isThisMonth && today.getDate() === date.getDate()) {
         return 'Ayer ' + date.getHours() + ':' + date.getMinutes()
     }
-    return date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()
+    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()
 }
 
 const url = 'http://pc.galax.be:8081'
