@@ -17,6 +17,7 @@ import { MaterialIcons, AntDesign, Entypo, Ionicons, FontAwesome } from '@expo/v
 
 
 
+
 export default function SettingsScreen(props) {
     const [me] = useGlobal('me')
     const [img, setImg] = useGlobal('img')
@@ -27,6 +28,7 @@ export default function SettingsScreen(props) {
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [repeatpassword, setRepeatpassword] = useState('')
+    const [showPasswordPart, setShowPasswordPart] = useState(false)
     const [showEdit, setShowEdit] = useState(false)
     const [logged] = useGlobal('logged')
 
@@ -177,12 +179,45 @@ export default function SettingsScreen(props) {
                 </View>
                 <TextInput onChangeText={setRole} style={inputStyle} value={role}></TextInput>
                 <Text style={{ marginLeft: 10, color: Colors.graylight, }}>Edita el nombre del puesto pulsándolo</Text>
+            </>
+            }
 
+            <TouchableOpacity onPress={() => {
+                setShowPasswordPart(!showPasswordPart)
+            }}
+                style={{
+                    flexDirection: 'row',
+                    marginTop: 15
+                }}>
+                <Text style={{ flexGrow: 1, marginLeft: 10, fontSize: 17, color: Colors.prinColor }}>Cambiar la contraseña</Text>
+                {!showPasswordPart && <MaterialIcons name="keyboard-arrow-down" size={32} color={Colors.prinColor} />}
+                {showPasswordPart && <MaterialIcons name="keyboard-arrow-up" size={32} color={Colors.prinColor} />}
+            </TouchableOpacity>
 
-                <View style={labelStyle}>
-                    <Ionicons name="md-key" size={27} color={Colors.passwordIcon} style={{ marginLeft: 2 }} />
-                    <Text style={textLabelStyle}>Contraseña</Text>
+            {showPasswordPart && <>
+                <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                }}>
+                    <TouchableOpacity style={eyeStyle1} onPress={() => {
+                        setShowPassword(!showPassword)
+                    }}>
+                        {!showPassword ? <FontAwesome name="eye-slash" size={19} color={Colors.prinColor} /> :
+                            <FontAwesome name="eye" size={19} color={Colors.prinColor} />}
+                    </TouchableOpacity>
+
+                    <TextInput
+                        onChangeText={(value) => {
+                            setPassword(value)
+                        }}
+                        style={{ ...inputStyle, width: '100%', marginBottom: 10 }}
+                        placeholder='Contraseña antigua'
+                        autoComplete='password'
+                        value={password}
+                        secureTextEntry={!showPassword}>
+                    </TextInput>
                 </View>
+
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center'
@@ -219,11 +254,61 @@ export default function SettingsScreen(props) {
                         style={{ ...inputStyle, width: '100%' }}
                         value={repeatpassword}
                         placeholder='Repetir contraseña'>
-
                     </TextInput>
                 </View>
-            </>
-            }
+                <TouchableOpacity onPress={() => {
+                    if (repeatpassword === password) {
+                        Alert.alert(
+                            'Cambiar la contraseña',
+                            '¿Estás seguro de querer cambiar la contraseña?',
+                            [
+                                {
+                                    text: 'Cambiar', onPress: async () => {
+                                        await modifyUser(
+                                            getParam('password', ''),
+                                        )
+                                    }
+                                },
+                                {
+                                    text: 'Me lo pensaré',
+                                    onPress: () => console.log('Cancel Pressed'),
+                                    style: 'cancel',
+                                },
+                            ],
+                            { cancelable: false }
+                        );
+                    } else {
+                        Alert.alert(
+                            'Contraseña incorrecta',
+                            'Las contraseñas no son iguales',
+                            [
+                                {
+                                    text: 'Cerrar',
+                                    onPress: () => console.log('Cancel Pressed'),
+                                    style: 'cancel',
+                                },
+                            ],
+                            { cancelable: false }
+                        );
+                    }
+
+                }} style={{
+                    marginVertical: 20,
+                    paddingVertical: 5,
+                    marginHorizontal: 40,
+                    borderWidth: 1,
+                    borderColor: Colors.prinColor,
+                    backgroundColor: Colors.prinColor,
+                    borderRadius: 30,
+                    alignItems: 'center'
+                }}>
+                    <Text style={{
+                        fontWeight: 'bold',
+                        marginRight: 5,
+                        color: 'white'
+                    }}>Guardar contraseña nueva </Text>
+                </TouchableOpacity>
+            </>}
 
             <TouchableOpacity style={{
                 paddingHorizontal: 5,

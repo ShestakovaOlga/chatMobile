@@ -10,15 +10,17 @@ import {
     View,
     InputEvent,
     Button,
-    Switch
+    Switch,
+
 } from 'react-native';
 import Colors from '../constants/Colors';
 import Checkbox from './Checkbox'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAvatar } from '../server';
 
+
 export default function Contact(props) {
-    return <View style={{ marginVertical: 15 }}>
+    return <View>
         <View style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -62,3 +64,5 @@ export default function Contact(props) {
         </View>
     </View>
 }
+
+
