@@ -3,7 +3,7 @@ import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React, { useState, setGlobal, useGlobal } from 'reactn';
 import { Platform, StatusBar, StyleSheet, View, Text } from 'react-native';
-
+import { BackdropProvider } from 'react-native-propel-kit';
 import AppNavigator from './navigation/AppNavigator';
 
 setGlobal({
@@ -47,25 +47,27 @@ export default function App(props) {
     );
   } else {
     return (
-      <View style={{
-        flex: 1,
-        backgroundColor: '#fff',
-        maxWidth: 1000,
-      }}>
-        {!connected && <Text style={{
-          position: 'absolute',
-          top: 40,
-          width: '100%',
-          textAlign: 'center',
-          backgroundColor: 'yellow',
-          elevation: 100,
-          zIndex: 100,
-          height: 50,
-          textAlignVertical: 'center'
-        }}>Connecting</Text>}
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <AppNavigator />
-      </View>
+      <BackdropProvider>
+        <View style={{
+          flex: 1,
+          backgroundColor: '#fff',
+          maxWidth: 1000,
+        }}>
+          {!connected && <Text style={{
+            position: 'absolute',
+            top: 40,
+            width: '100%',
+            textAlign: 'center',
+            backgroundColor: 'yellow',
+            elevation: 100,
+            zIndex: 100,
+            height: 50,
+            textAlignVertical: 'center'
+          }}>Connecting</Text>}
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          <AppNavigator />
+        </View>
+      </BackdropProvider>
     );
   }
 }

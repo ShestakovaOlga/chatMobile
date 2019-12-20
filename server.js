@@ -223,10 +223,10 @@ export function getTime(date) {
     return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()
 }
 
-const url = 'http://pc.galax.be:8081'
-const ws = 'ws://pc.galax.be:8081/ws'
-//const url = 'http://192.168.1.10:8081'
-//const ws = 'ws://192.168.1.10:8081/ws'
+//const url = 'http://pc.galax.be:8081'
+//const ws = 'ws://pc.galax.be:8081/ws'
+const url = 'http://192.168.1.10:8081'
+const ws = 'ws://192.168.1.10:8081/ws'
 
 
 // Crea una nueva conexión.
