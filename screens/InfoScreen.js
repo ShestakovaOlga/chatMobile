@@ -8,22 +8,30 @@ import {
   TouchableOpacity,
   View,
   InputEvent,
-  Modal
+  Modal,
+  Dimensions,
+  Platform
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Colors from '../constants/Colors';
-import { Calendar, Agenda } from 'react-native-calendars';
-import { MaterialIcons, AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
+import { MaterialIcons, FontAwesome, Entypo, Ionicons } from '@expo/vector-icons';
 import { BackdropContext, TimePicker } from 'react-native-propel-kit';
 
+LocaleConfig.locales['es'] = {
+  monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+  monthNamesShort: ['Ene.', 'Feb.', 'Mar', 'Abr', 'May', 'Jun', 'Jul.', 'Ago', 'Sept.', 'Oct.', 'Nov.', 'Dic.'],
+  dayNames: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+  dayNamesShort: ['Lun.', 'Mar.', 'Mié.', 'Jue.', 'Vie.', 'Sáb.', 'Dom.']
+};
+
+LocaleConfig.defaultLocale = 'es';
 
 
 export default function InfoScreen() {
   const [me] = useGlobal('me')
-  const [img, setImg] = useGlobal('img')
-  const [showSelectimg, setShowSelectimg] = useGlobal('showSelectimg')
-  const [showSettings, setShowSettings] = useGlobal('showSettings')
   const [modalVisible, setModalVisible] = useState(false)
+  const [modalVisibleSeeTime, setModalVisibleSeeTime] = useState(false)
   const [selectedDay, setSelectedDay] = useState('')
   const [selectedTimeStart, setSelectedTimeStart] = useState(new Date());
   const [selectedTimeEnd, setSelectedTimeEnd] = useState(new Date());
@@ -62,6 +70,9 @@ export default function InfoScreen() {
     borderBottomColor: Colors.prinColorLight,
     justifyContent: 'space-between'
   }
+  const deviceWidth = Dimensions.get("window").width;
+  const deviceHeight = Dimensions.get("window").height;
+
   return (
     <ScrollView style={{
       flex: 1,
@@ -124,26 +135,79 @@ export default function InfoScreen() {
         <View style={lineViewStyle}></View>
 
         <View style={viewTextStyle}>
-          <AntDesign name="clockcircleo" size={20} color={Colors.workhoursIcon} />
+          <FontAwesome name="calendar" size={20} color={Colors.workhoursIcon} style={{ marginLeft: 5, }} />
           <Text style={{
             fontSize: 15,
             fontWeight: 'bold',
-            marginLeft: 10,
-          }}>De Lun a Vie, 8:00 - 15:00</Text>
+            marginLeft: 15,
+          }}>Calendario</Text>
         </View>
         <View style={{
           ...lineViewStyle,
-          marginLeft: 3,
+          marginLeft: 35,
         }}></View>
 
         <Calendar
+          style={{ marginBottom: 60 }}
           onDayPress={(day) => {
             setSelectedDay(day)
+            setModalVisibleSeeTime(true)
+          }}
+          onDayLongPress={(day) => {
+            setSelectedDay(day)
             setModalVisible(true)
-            console.warn('selected day', day)
           }}
         />
 
+        {/* See work time */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisibleSeeTime}
+        >
+          <TouchableOpacity onPress={() => { setModalVisibleSeeTime(false) }}
+            style={{ height: deviceHeight / 2 }}>
+          </TouchableOpacity>
+
+          <View style={{
+            height: deviceHeight / 2,
+            backgroundColor: 'white',
+            borderRadius: 40,
+            borderWidth: 1,
+            borderColor: Colors.graylight,
+            justifyContent: 'space-around',
+            alignItems: 'center'
+          }}>
+
+            <Text style={{ fontSize: 17, color: Colors.companyIcon }}>
+              {selectedDay.day}/{selectedDay.month}/{selectedDay.year}
+            </Text>
+
+            <Text style={{ fontSize: 19, color: Colors.workhoursIcon }}>Horario</Text>
+            <Text style={{
+              fontSize: 18,
+              color: Colors.graylight
+            }}>Hora de inicio</Text>
+            <Text style={{ color: Colors.companyIcon, fontSize: 20 }}>10:00 </Text>
+
+            <Text style={{
+              fontSize: 18,
+              color: Colors.graylight
+            }}>Hora de fin</Text>
+            <Text style={{ color: Colors.companyIcon, fontSize: 20 }}>18:00</Text>
+
+            {/* <TouchableOpacity onPress={() => { setModalVisible(true) }}>
+              <Text style={{
+                fontSize: 18,
+                color: Colors.prinColor
+              }}>Editar</Text>
+            </TouchableOpacity> */}
+
+          </View>
+
+        </Modal>
+
+        {/* Cange work time */}
         <Modal
           animationType="slide"
           transparent={false}
@@ -162,11 +226,15 @@ export default function InfoScreen() {
             position: 'absolute',
             right: 10,
             top: 40
-          }} onPress={() => { setModalVisible(false) }}><Text style={{
-            fontWeight: 'bold',
-            marginRight: 5,
-            color: Colors.prinColor
-          }}>Guardar</Text>
+          }} onPress={() => {
+            sendWorkTime(),
+              setModalVisible(false)
+          }}>
+            <Text style={{
+              fontWeight: 'bold',
+              marginRight: 5,
+              color: Colors.prinColor
+            }}>Guardar</Text>
           </TouchableOpacity>
 
           <View style={{
@@ -182,7 +250,7 @@ export default function InfoScreen() {
                 fontSize: 18,
                 marginLeft: 10
               }}>Elige hora de inicio</Text>
-              <TimePicker style={timePickerStyle} title="Pick a time" value={selectedTimeStart} onChange={setSelectedTimeStart} />
+              <TimePicker style={timePickerStyle} title="Hora de inicio" value={selectedTimeStart} onChange={setSelectedTimeStart} />
 
             </View>
 
@@ -191,7 +259,8 @@ export default function InfoScreen() {
                 fontSize: 18,
                 marginLeft: 10
               }}>Elige hora de fin</Text>
-              <TimePicker style={timePickerStyle} title="Pick a time" value={selectedTimeEnd} onChange={setSelectedTimeEnd} />
+              <TimePicker style={timePickerStyle} title="Hora de fin" value={selectedTimeEnd}
+                onChange={setSelectedTimeEnd} />
             </View>
           </View>
 

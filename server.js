@@ -134,6 +134,26 @@ export function Users() {
 }
 
 
+
+//mandar horario
+export function sendWorkTime(day, timeStart, timeEnd) {
+    socket.send(JSON.stringify({
+        command: 'sendWorkTime',
+        payload: {
+            day,
+            timeStart,
+            timeEnd
+        }
+    }))
+}
+
+//traer el horario y pintarlo en el calendario
+export async function getWorkTime() {
+    socket.send(JSON.stringify({
+        command: 'getWorkTime',
+    }));
+}
+
 //iniciar sesion
 export async function login(email, password) {
     let ids = {}
