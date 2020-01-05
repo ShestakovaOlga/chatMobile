@@ -60,6 +60,8 @@ export default function MembersGroupInfo(props) {
                     return <TouchableOpacity onPress={() => {
                         setSelectedUserInfo(item.id)
                         props.navigation.navigate('NameUserInfo')
+                        console.warn('usuarios', item.name);
+
                     }}
                         style={{
                             flexDirection: 'row',

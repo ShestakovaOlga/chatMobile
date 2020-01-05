@@ -126,6 +126,7 @@ export default function MessageScreen(props) {
                     })
                 }}
                 user={me}
+                renderUsernameOnMessage={true}
             />
             {Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={StatusBar.currentHeight * 3} />}
             {/* {chat && me && chat.Messages.map((message) => <View style={{
